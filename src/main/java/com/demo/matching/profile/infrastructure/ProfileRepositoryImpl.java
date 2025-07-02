@@ -1,0 +1,29 @@
+package com.demo.matching.profile.infrastructure;
+
+import com.demo.matching.common.exception.BusinessException;
+import com.demo.matching.profile.domain.Profile;
+import com.demo.matching.profile.infrastructure.entity.ProfileEntity;
+import com.demo.matching.profile.service.port.in.ProfileRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import static com.demo.matching.common.exception.BusinessResponseStatus.PROFILE_NOT_FOUND;
+
+@Repository
+@RequiredArgsConstructor
+public class ProfileRepositoryImpl implements ProfileRepository {
+
+    private final ProfileJpaRepository profileJpaRepository;
+
+    @Override
+    public Profile save(Profile profile) {
+        return profileJpaRepository.save(ProfileEntity.from(profile)).to();
+    }
+
+    @Override
+    public Profile findById(Long profileId) {
+        return profileJpaRepository.findWithMemberById(profileId)
+                .orElseThrow(() -> new BusinessException(PROFILE_NOT_FOUND))
+                .to();
+    }
+}

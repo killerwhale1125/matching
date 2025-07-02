@@ -1,0 +1,41 @@
+package com.demo.matching.member.infrastructure.entity;
+
+import com.demo.matching.common.jpa.BaseTimeEntity;
+import com.demo.matching.member.domain.Member;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PROTECTED;
+
+@Getter
+@Entity
+@Table(name = "member")
+@NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor(access = PRIVATE)
+public class MemberEntity extends BaseTimeEntity {
+    @Id
+    @Column(name = "member_id")
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    public static MemberEntity from(Member member) {
+        MemberEntity entity = new MemberEntity();
+        entity.id = member.getId();
+        entity.name = member.getName();
+        return entity;
+    }
+
+    public Member to() {
+        return Member.builder()
+                .id(id)
+                .name(name)
+                .build();
+    }
+}
