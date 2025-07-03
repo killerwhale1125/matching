@@ -9,12 +9,18 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class Profile {
-    private Long id;    // 프로필 pk
-    private Member member;  // 사용자 정보
-    private int viewCount;  // 조회수
+    /* 프로필 pk */
+    private Long id;
+    /* 사용자 정보 */
+    private Member member;
+    /* 조회수 */
+    private int viewCount;
+    /* 생성 일자 */
     private LocalDateTime createdTime;
+    /* 수정 일자 */
     private LocalDateTime modifiedTime;
 
+    /* 회원 정보로 프로필 생성 */
     public static Profile create(Member member) {
         return Profile.builder()
                 .member(member)
@@ -22,6 +28,7 @@ public class Profile {
                 .build();
     }
 
+    /* 조회수 업데이트 */
     public void updateViewCount(int viewCount) {
         this.viewCount = viewCount;
     }

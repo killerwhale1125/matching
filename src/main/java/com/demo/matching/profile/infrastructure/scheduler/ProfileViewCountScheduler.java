@@ -20,13 +20,13 @@ import static com.demo.matching.profile.infrastructure.redis.RedisViewCountPrefi
 @RequiredArgsConstructor
 public class ProfileViewCountScheduler {
 
-    private final RedisTemplate<String, Long> redisTemplate;
+    private final RedisTemplate<String, Long> longRedisTemplate;
     private final ProfileJpaRepository profileJpaRepository;
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.BASIC_ISO_DATE;
 
     @Scheduled(cron = "0 0 3 * * *")
     public void syncHotProfiles() {
-        Set<Long> hotProfileIds = redisTemplate.opsForSet().members(PROFILE_VIEW_HOT.getKey());
+        Set<Long> hotProfileIds = longRedisTemplate.opsForSet().members(PROFILE_VIEW_HOT.getKey());
         if (hotProfileIds == null || hotProfileIds.isEmpty()) return;
 
         LocalDate today = LocalDate.now();
@@ -48,14 +48,14 @@ public class ProfileViewCountScheduler {
         String viewCountKey = PROFILE_VIEW.withSuffix(profileId);
         String sinceKey = PROFILE_VIEW_HOT_SINCE.withSuffix(profileId);
 
-        Long viewCount = redisTemplate.opsForValue().get(viewCountKey);
+        Long viewCount = longRedisTemplate.opsForValue().get(viewCountKey);
         if (viewCount == null) return;
 
         int dbViewCount = profileJpaRepository.getViewCount(profileId);
         int diff = viewCount.intValue() - dbViewCount;
         if (diff <= 0) return;
 
-        Long sinceRaw = redisTemplate.opsForValue().get(sinceKey);
+        Long sinceRaw = longRedisTemplate.opsForValue().get(sinceKey);
         if (sinceRaw == null) return;
 
         LocalDate sinceDate = LocalDate.parse(String.valueOf(sinceRaw), DATE_FORMAT);
@@ -63,8 +63,8 @@ public class ProfileViewCountScheduler {
 
         if (isNotInteresting(daysElapsed, diff)) {
             profileJpaRepository.incrementViewCountBy(profileId, diff);
-            redisTemplate.opsForSet().remove(PROFILE_VIEW_HOT.getKey(), profileId);
-            redisTemplate.delete(Arrays.asList(viewCountKey, sinceKey));
+            longRedisTemplate.opsForSet().remove(PROFILE_VIEW_HOT.getKey(), profileId);
+            longRedisTemplate.delete(Arrays.asList(viewCountKey, sinceKey));
         }
     }
 

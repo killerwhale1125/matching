@@ -4,12 +4,15 @@ import com.demo.matching.common.jpa.BaseTimeEntity;
 import com.demo.matching.member.infrastructure.entity.MemberEntity;
 import com.demo.matching.profile.domain.Profile;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import static com.demo.matching.common.util.SafeEntityMapper.*;
-import static com.demo.matching.profile.domain.Profile.*;
-import static jakarta.persistence.GenerationType.*;
-import static lombok.AccessLevel.*;
+import static com.demo.matching.common.util.SafeEntityMapper.mapIfInitialized;
+import static com.demo.matching.common.util.SafeEntityMapper.mapIfNotNull;
+import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @Entity
@@ -28,20 +31,24 @@ public class ProfileEntity extends BaseTimeEntity {
 
     private int viewCount;
 
+    /* Domain -> Entity 변환 */
     public static ProfileEntity from(Profile profile) {
         ProfileEntity entity = new ProfileEntity();
         entity.id = profile.getId();
         entity.viewCount = profile.getViewCount();
+        /* Null 체크 */
         entity.member = mapIfNotNull(MemberEntity::from, profile.getMember());
         return entity;
     }
 
+    /* Entity -> Domain 변환 */
     public Profile to() {
-        ProfileBuilder builder = builder()
+        Profile.ProfileBuilder builder = Profile.builder()
                 .id(id)
                 .viewCount(viewCount)
                 .createdTime(createdTime)
                 .modifiedTime(modifiedTime);
+        /* JPA Proxy 체크 */
         builder.member(mapIfInitialized(MemberEntity::to, member));
         return builder.build();
     }
