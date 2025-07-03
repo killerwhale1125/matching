@@ -1,7 +1,7 @@
 package com.demo.matching.member.controller.port.in;
 
-import com.demo.matching.member.controller.response.MemberResponse;
 import com.demo.matching.member.controller.request.MemberSignup;
+import com.demo.matching.member.controller.response.MemberResponse;
 import jakarta.validation.Valid;
 
 public interface MemberService {
