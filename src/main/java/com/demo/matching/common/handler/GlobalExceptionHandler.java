@@ -1,26 +1,39 @@
 package com.demo.matching.common.handler;
 
-import com.demo.matching.common.exception.ApiErrorResponse;
 import com.demo.matching.common.exception.BusinessException;
+import com.demo.matching.common.exception.BusinessResponse;
 import com.demo.matching.common.exception.BusinessResponseStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Optional;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Enum Status 전용 Handler
+     */
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ApiErrorResponse> handleBusiness(BusinessException ex) {
-        BusinessResponseStatus status = ex.getStatus();
-        return ResponseEntity.status(status.getHttpStatus())
-                .body(new ApiErrorResponse(status.getCode(), status.getMessage()));
+    public ResponseEntity<BusinessResponse<BusinessResponseStatus>> handleBusiness(BusinessException e) {
+        BusinessResponse<BusinessResponseStatus> response = new BusinessResponse<>(e.getStatus());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handleUnknown(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiErrorResponse("INTERNAL_SERVER_ERROR", "알 수 없는 서버 오류가 발생했습니다."));
+    /**
+     * @Valid 전용 Handler
+     */
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<BusinessResponse<BusinessResponseStatus>> handleBindException(BindException e) {
+        String errorMessage = Optional.ofNullable(e.getBindingResult().getFieldError())
+                .map(fieldError -> fieldError.getDefaultMessage())
+                .orElse("요청 값이 올바르지 않습니다.");
+
+        BusinessResponseStatus status = BusinessResponseStatus.BAD_REQUEST;
+        BusinessResponse<BusinessResponseStatus> response = new BusinessResponse<>(status, errorMessage);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
