@@ -25,6 +25,7 @@ public class MemberEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
+    /* Domain -> Entity 변환 */
     public static MemberEntity from(Member member) {
         MemberEntity entity = new MemberEntity();
         entity.id = member.getId();
@@ -32,6 +33,7 @@ public class MemberEntity extends BaseTimeEntity {
         return entity;
     }
 
+    /* Entity -> Domain 변환 */
     public Member to() {
         return Member.builder()
                 .id(id)
