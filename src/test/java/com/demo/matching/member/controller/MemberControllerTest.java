@@ -23,12 +23,12 @@ public class MemberControllerTest {
     @DisplayName("회원가입 요청 시 200 OK와 MemberResponse 반환")
     void signup_OK() throws Exception {
         // when + then
-        mockMvc.perform(post("/api/member/signup")
+        mockMvc.perform(post("/api/members/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"테스트이름\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("테스트이름"))
-                .andExpect(jsonPath("$.profileDetail").exists());
+                .andExpect(jsonPath("$.result.name").value("테스트이름"))
+                .andExpect(jsonPath("$.result.profileDetail").exists());
     }
 }

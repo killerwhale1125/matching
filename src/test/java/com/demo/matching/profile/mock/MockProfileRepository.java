@@ -1,6 +1,7 @@
 package com.demo.matching.profile.mock;
 
 import com.demo.matching.common.exception.BusinessException;
+import com.demo.matching.profile.controller.request.ProfileSearchRequest;
 import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.service.port.in.ProfileRepository;
 

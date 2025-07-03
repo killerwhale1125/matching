@@ -16,10 +16,10 @@ public class MockMemberService implements MemberService {
 
     @Override
     public MemberResponse signup(MemberSignup request) {
-        Member member = memberRepository.save(Member.signup(request));
-        Profile profile = profileRepository.save(Profile.create(member));
-
-        // 응답 변환
+        /* Member 생성 */
+        final Member member = memberRepository.save(Member.signup(request));
+        /* Profile 생성 */
+        final Profile profile = profileRepository.save(Profile.create(member));
         return MemberResponse.from(member, profile);
     }
 }

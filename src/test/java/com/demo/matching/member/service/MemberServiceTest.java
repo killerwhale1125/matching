@@ -45,4 +45,5 @@ public class MemberServiceTest {
         assertThat(result.profileDetail()).isNotNull();
         assertThat(result.profileDetail().viewCount()).isEqualTo(0);
     }
+
 }

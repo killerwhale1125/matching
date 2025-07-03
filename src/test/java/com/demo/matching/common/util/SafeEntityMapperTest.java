@@ -20,9 +20,9 @@ public class SafeEntityMapperTest {
     @Test
     @DisplayName("mapIfNotNull - null이 아닌 경우 mapper 적용")
     void mapIfNotNull_apply() {
-        Dummy dummy = new Dummy("hello");
+        final Dummy dummy = new Dummy("hello");
 
-        String result = SafeEntityMapper.mapIfNotNull(Dummy::getValue, dummy);
+        final String result = SafeEntityMapper.mapIfNotNull(Dummy::getValue, dummy);
 
         assertThat(result).isEqualTo("hello");
     }
@@ -30,9 +30,9 @@ public class SafeEntityMapperTest {
     @Test
     @DisplayName("mapIfNotNull - null인 경우 null 반환")
     void mapIfNotNull_null() {
-        Dummy dummy = null;
+        final Dummy dummy = null;
 
-        String result = SafeEntityMapper.mapIfNotNull(Dummy::getValue, dummy);
+        final String result = SafeEntityMapper.mapIfNotNull(Dummy::getValue, dummy);
 
         assertThat(result).isNull();
     }
@@ -40,10 +40,10 @@ public class SafeEntityMapperTest {
     @Test
     @DisplayName("mapIfInitialized - 초기화된 경우 mapper 적용")
     void mapIfInitialized_loaded() {
-        Dummy dummy = new Dummy("world");
+        final Dummy dummy = new Dummy("world");
 
         // 테스트 환경에서는 항상 로딩된 객체로 간주됨
-        String result = SafeEntityMapper.mapIfInitialized(Dummy::getValue, dummy);
+        final String result = SafeEntityMapper.mapIfInitialized(Dummy::getValue, dummy);
 
         assertThat(result).isEqualTo("world");
     }
@@ -51,9 +51,9 @@ public class SafeEntityMapperTest {
     @Test
     @DisplayName("mapIfInitialized - null인 경우 null 반환")
     void mapIfInitialized_null() {
-        Dummy dummy = null;
+        final Dummy dummy = null;
 
-        String result = SafeEntityMapper.mapIfInitialized(Dummy::getValue, dummy);
+        final String result = SafeEntityMapper.mapIfInitialized(Dummy::getValue, dummy);
 
         assertThat(result).isNull();
     }
