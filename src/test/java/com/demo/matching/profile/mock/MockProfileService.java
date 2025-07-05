@@ -1,16 +1,17 @@
 package com.demo.matching.profile.mock;
 
 import com.demo.matching.member.domain.Member;
-import com.demo.matching.member.controller.request.MemberSignup;
+import com.demo.matching.member.domain.dto.ProfileInfo;
+import com.demo.matching.member.presentation.request.MemberSignup;
 import com.demo.matching.member.mock.MockMemberRepository;
-import com.demo.matching.member.service.port.in.MemberRepository;
-import com.demo.matching.profile.controller.port.in.ProfileService;
-import com.demo.matching.profile.controller.request.ProfileSearchRequest;
-import com.demo.matching.profile.controller.response.ProfileDetailResponse;
-import com.demo.matching.profile.controller.response.MemberProfileResponse;
+import com.demo.matching.member.application.port.in.MemberRepository;
+import com.demo.matching.profile.presentation.port.in.ProfileService;
+import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
+import com.demo.matching.profile.presentation.response.ProfileDetailResponse;
+import com.demo.matching.profile.presentation.response.MemberProfileResponse;
 import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.service.port.in.ProfileRepository;
-import com.demo.matching.profile.service.port.out.ProfileViewCountPort;
+import com.demo.matching.profile.application.port.in.ProfileRepository;
+import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,16 @@ public class MockProfileService implements ProfileService {
                 .build();
         result.add(memberProfileResponse);
         return result;
+    }
+
+    @Override
+    public ProfileInfo create(Member member) {
+        return null;
+    }
+
+    @Override
+    public ProfileInfo create() {
+        return null;
     }
 
     private Member initMember() {

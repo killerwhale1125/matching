@@ -1,18 +1,31 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/db?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/test?allowPublicKeyRetrieval=true&useSSL=false
     username: test
     password: test
   jpa:
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: false  # 쿼리 확인용
     show-sql: true
   redis:
     cache:
-      host:
+      host: 192.168.45.206
       port: 6379
 
 logging:
   level:
     root: INFO
+
+toss:
+  secret-key: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6
+  client-key: test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm
+  base-url: https://api.tosspayments.com
+  success-url: http://127.0.0.1/success
+  fail-url: http://127.0.0.1/fail
+  confirm-endpoint: /v1/payments/confirm
+  valid-endpoint: /v1/payments

@@ -1,8 +1,8 @@
 package com.demo.matching.profile.mock;
 
-import com.demo.matching.profile.controller.request.ProfileSearchRequest;
+import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
 import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
-import com.demo.matching.profile.service.port.in.ProfileQueryRepository;
+import com.demo.matching.profile.application.port.in.ProfileQueryRepository;
 
 import java.util.List;
 

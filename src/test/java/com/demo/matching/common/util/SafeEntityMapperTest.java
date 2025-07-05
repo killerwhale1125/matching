@@ -1,5 +1,6 @@
 package com.demo.matching.common.util;
 
+import com.demo.matching.core.common.service.SafeEntityMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

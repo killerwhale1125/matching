@@ -1,16 +1,15 @@
 package com.demo.matching.profile.mock;
 
-import com.demo.matching.common.exception.BusinessException;
-import com.demo.matching.profile.controller.request.ProfileSearchRequest;
+import com.demo.matching.core.common.exception.BusinessException;
 import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.service.port.in.ProfileRepository;
+import com.demo.matching.profile.application.port.in.ProfileRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.demo.matching.common.exception.BusinessResponseStatus.PROFILE_NOT_FOUND;
+import static com.demo.matching.core.common.exception.BusinessResponseStatus.PROFILE_NOT_FOUND;
 
 public class MockProfileRepository implements ProfileRepository {
 

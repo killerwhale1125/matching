@@ -2,7 +2,7 @@ package com.demo.matching.profile.mock;
 
 import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
-import com.demo.matching.profile.service.port.out.ProfileViewCountPort;
+import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
 
 import java.util.List;
 import java.util.Map;

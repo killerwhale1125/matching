@@ -1,6 +1,6 @@
 package com.demo.matching.member.domain;
 
-import com.demo.matching.member.controller.request.MemberSignup;
+import com.demo.matching.member.presentation.request.MemberSignup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

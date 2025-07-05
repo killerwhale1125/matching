@@ -1,7 +1,7 @@
 package com.demo.matching.member.mock;
 
 import com.demo.matching.member.domain.Member;
-import com.demo.matching.member.service.port.in.MemberRepository;
+import com.demo.matching.member.application.port.in.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,5 +28,10 @@ public class MockMemberRepository implements MemberRepository {
             data.add(member);
             return member;
         }
+    }
+
+    @Override
+    public Member findById(Long memberId) {
+        return null;
     }
 }
