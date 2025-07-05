@@ -1,4 +1,4 @@
-package com.demo.matching.profile.controller.response;
+package com.demo.matching.profile.presentation.response;
 
 import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
 import lombok.Builder;

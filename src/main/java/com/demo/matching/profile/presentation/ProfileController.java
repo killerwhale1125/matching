@@ -1,10 +1,10 @@
-package com.demo.matching.profile.controller;
+package com.demo.matching.profile.presentation;
 
-import com.demo.matching.common.exception.BusinessResponse;
-import com.demo.matching.profile.controller.port.in.ProfileService;
-import com.demo.matching.profile.controller.request.ProfileSearchRequest;
-import com.demo.matching.profile.controller.response.MemberProfileResponse;
-import com.demo.matching.profile.controller.response.ProfileDetailResponse;
+import com.demo.matching.core.common.exception.BusinessResponse;
+import com.demo.matching.profile.presentation.port.in.ProfileService;
+import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
+import com.demo.matching.profile.presentation.response.MemberProfileResponse;
+import com.demo.matching.profile.presentation.response.ProfileDetailResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.demo.matching.profile.domain;
+package com.demo.matching.profile.domain.enums;
 
 public enum ProfileSortType {
     /* 이름 가나다순 */

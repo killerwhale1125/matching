@@ -1,6 +1,6 @@
-package com.demo.matching.profile.controller.request;
+package com.demo.matching.profile.presentation.request;
 
-import com.demo.matching.profile.domain.ProfileSortType;
+import com.demo.matching.profile.domain.enums.ProfileSortType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

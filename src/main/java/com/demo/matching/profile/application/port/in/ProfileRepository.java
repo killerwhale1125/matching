@@ -1,4 +1,4 @@
-package com.demo.matching.profile.service.port.in;
+package com.demo.matching.profile.application.port.in;
 
 import com.demo.matching.profile.domain.Profile;
 

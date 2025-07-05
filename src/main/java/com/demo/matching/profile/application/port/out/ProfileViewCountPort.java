@@ -1,4 +1,4 @@
-package com.demo.matching.profile.service.port.out;
+package com.demo.matching.profile.application.port.out;
 
 import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;

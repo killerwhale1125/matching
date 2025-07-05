@@ -1,9 +1,9 @@
 package com.demo.matching.profile.infrastructure.redis;
 
 import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.infrastructure.ProfileJpaRepository;
+import com.demo.matching.profile.infrastructure.repository.ProfileJpaRepository;
 import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
-import com.demo.matching.profile.service.port.out.ProfileViewCountPort;
+import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,14 +42,12 @@ public class RedisViewCountAdapter implements ProfileViewCountPort {
             return profile;
         }
 
-//        해당 쿼리는 Deprecated 이며, MySQL 8.0.20 이전 버전일 경우 사용
-//        profileJpaRepository.incrementViewCountAndReturn(profileId);
-//        int viewCount = (int) profileJpaRepository.getLastUpdatedViewCount();
-        
         /* Hot 후보가 아니라면 DB 조회수 증가 */
-        int viewCount = profileJpaRepository.incrementViewCountAndReturn(profileId);
+        profileJpaRepository.incrementViewCount(profileId);
+        int viewCount = profileJpaRepository.getViewCount(profileId);
+        profile.updateViewCount(viewCount);
 
-        /* 조회수가 10의 배수인 경우 Hot 후보로 등록하고 Redis에 캐싱 */
+        /* 조회수가 10의 배수인 경우 Hot 후보로 등록하고 Redis에 캐싱 ( REPEATABLE 격리 수준으로 동시성 안전 ) */
         if (viewCount % 10 == 0) {
             long today = Long.parseLong(LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE));
 
@@ -62,7 +60,6 @@ public class RedisViewCountAdapter implements ProfileViewCountPort {
             /* 추후 Hot 후보 탈락을 위한 profile:view:hot:since:${profileId} -> 20250701(캐싱된 날짜) */
             longRedisTemplate.opsForValue().set(PROFILE_VIEW_HOT_SINCE.withSuffix(profileId), today);
         }
-        profile.updateViewCount(viewCount);
         return profile;
     }
 

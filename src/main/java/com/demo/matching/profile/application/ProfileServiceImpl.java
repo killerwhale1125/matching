@@ -1,15 +1,17 @@
-package com.demo.matching.profile.service;
+package com.demo.matching.profile.application;
 
-import com.demo.matching.profile.controller.port.in.ProfileService;
-import com.demo.matching.profile.controller.request.ProfileSearchRequest;
-import com.demo.matching.profile.controller.response.ProfileDetailResponse;
-import com.demo.matching.profile.controller.response.MemberProfileResponse;
+import com.demo.matching.member.domain.Member;
+import com.demo.matching.member.domain.dto.ProfileInfo;
+import com.demo.matching.profile.presentation.port.in.ProfileService;
+import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
+import com.demo.matching.profile.presentation.response.ProfileDetailResponse;
+import com.demo.matching.profile.presentation.response.MemberProfileResponse;
 import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.domain.ProfileSortType;
+import com.demo.matching.profile.domain.enums.ProfileSortType;
 import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
-import com.demo.matching.profile.service.port.in.ProfileQueryRepository;
-import com.demo.matching.profile.service.port.in.ProfileRepository;
-import com.demo.matching.profile.service.port.out.ProfileViewCountPort;
+import com.demo.matching.profile.application.port.in.ProfileQueryRepository;
+import com.demo.matching.profile.application.port.in.ProfileRepository;
+import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -50,6 +52,11 @@ public class ProfileServiceImpl implements ProfileService {
         sortMemberProfiles(memberProfiles, request.profileSortType());
 
         return memberProfiles.stream().map(MemberProfileResponse::from).toList();
+    }
+
+    @Override
+    public ProfileInfo create(Member member) {
+        return ProfileInfo.from(profileRepository.save(Profile.create(member)).getViewCount());
     }
 
     /**

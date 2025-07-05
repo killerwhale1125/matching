@@ -1,6 +1,6 @@
-package com.demo.matching.profile.service.port.in;
+package com.demo.matching.profile.application.port.in;
 
-import com.demo.matching.profile.controller.request.ProfileSearchRequest;
+import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
 import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
 
 import java.util.List;

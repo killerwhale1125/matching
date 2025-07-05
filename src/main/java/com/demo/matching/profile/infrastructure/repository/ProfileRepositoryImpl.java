@@ -1,13 +1,13 @@
-package com.demo.matching.profile.infrastructure;
+package com.demo.matching.profile.infrastructure.repository;
 
-import com.demo.matching.common.exception.BusinessException;
+import com.demo.matching.core.common.exception.BusinessException;
 import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.infrastructure.entity.ProfileEntity;
-import com.demo.matching.profile.service.port.in.ProfileRepository;
+import com.demo.matching.profile.application.port.in.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import static com.demo.matching.common.exception.BusinessResponseStatus.PROFILE_NOT_FOUND;
+import static com.demo.matching.core.common.exception.BusinessResponseStatus.PROFILE_NOT_FOUND;
 
 @Repository
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
 package com.demo.matching.profile.infrastructure.entity;
 
-import com.demo.matching.common.jpa.BaseTimeEntity;
+import com.demo.matching.core.common.infrastructure.BaseTimeEntity;
 import com.demo.matching.member.infrastructure.entity.MemberEntity;
 import com.demo.matching.profile.domain.Profile;
 import jakarta.persistence.*;
@@ -8,8 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.demo.matching.common.util.SafeEntityMapper.mapIfInitialized;
-import static com.demo.matching.common.util.SafeEntityMapper.mapIfNotNull;
+import static com.demo.matching.core.common.service.SafeEntityMapper.mapIfInitialized;
+import static com.demo.matching.core.common.service.SafeEntityMapper.mapIfNotNull;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
@@ -36,6 +36,8 @@ public class ProfileEntity extends BaseTimeEntity {
         ProfileEntity entity = new ProfileEntity();
         entity.id = profile.getId();
         entity.viewCount = profile.getViewCount();
+        entity.createdTime = profile.getCreatedTime();
+        entity.modifiedTime = profile.getModifiedTime();
         /* Null 체크 */
         entity.member = mapIfNotNull(MemberEntity::from, profile.getMember());
         return entity;
