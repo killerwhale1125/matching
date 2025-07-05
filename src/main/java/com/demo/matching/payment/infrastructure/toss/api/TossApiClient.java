@@ -1,15 +1,15 @@
 package com.demo.matching.payment.infrastructure.toss.api;
 
+import com.demo.matching.payment.application.toss.port.in.TossApiClientPort;
+import com.demo.matching.payment.common.toss.exception.enums.TossPaymentConfirmErrorCode;
+import com.demo.matching.payment.common.toss.exception.TossPaymentConfirmException;
 import com.demo.matching.payment.infrastructure.toss.TossInfoMapper;
-import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
-import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
-import com.demo.matching.payment.presentation.toss.response.TossConfirmResponse;
-import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmErrorCode;
-import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmException;
+import com.demo.matching.payment.infrastructure.toss.dto.TossConfirmApiResponse;
 import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentFailOutput;
+import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
 import com.demo.matching.payment.infrastructure.toss.interceptor.PaymentExceptionInterceptor;
 import com.demo.matching.payment.infrastructure.toss.properties.TossProperties;
-import com.demo.matching.payment.application.toss.port.in.TossApiClientPort;
+import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -51,23 +51,23 @@ public class TossApiClient implements TossApiClientPort {
                 .build();
     }
 
-    /* 승인 전 orderId 로 Toss 에 조회하여 사용자 정보와 일치하는지 검증 정보 GET 요청 */
+    /* 승인 전 paymentKey 로 Toss 에 조회하여 사용자 정보와 일치하는지 검증 정보 GET 요청 */
     @Override
     public TossPaymentInfo findPaymentByPaymentKey(String paymentKey) {
-        TossConfirmResponse tossResponse = restClient.get()
+        TossConfirmApiResponse tossResponse = restClient.get()
                 .uri(tossProperties.getValidEndpoint() + "/" + paymentKey)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, (request, response) -> {
                     throw new TossPaymentConfirmException(getPaymentConfirmErrorCode(response));
                 })
-                .body(TossConfirmResponse.class);
+                .body(TossConfirmApiResponse.class);
 
         return TossInfoMapper.from(tossResponse);
     }
 
     /* Toss 에 최종 승인 요청 */
-    public TossConfirmResponse requestConfirm(TossConfirmRequest tossConfirmRequest) {
-        return restClient.post()
+    public TossPaymentInfo requestConfirm(TossConfirmRequest tossConfirmRequest) {
+        TossConfirmApiResponse tossConfirmApiResponse = restClient.post()
                 .uri(tossProperties.getConfirmEndpoint())
                 .contentType(APPLICATION_JSON)
                 .body(Map.of(
@@ -81,7 +81,9 @@ public class TossApiClient implements TossApiClientPort {
                     /* 여기서 재시도 할 수 있는 결제 건 인지 아닌지 판단 */
                     throw new TossPaymentConfirmException(getPaymentConfirmErrorCode(response));
                 })
-                .body(TossConfirmResponse.class);
+                .body(TossConfirmApiResponse.class);
+
+        return TossPaymentInfo.from(tossConfirmApiResponse);
     }
 
     /**

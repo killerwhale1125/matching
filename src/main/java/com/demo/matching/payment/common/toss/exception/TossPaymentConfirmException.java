@@ -1,5 +1,6 @@
-package com.demo.matching.payment.domain.toss.exception;
+package com.demo.matching.payment.common.toss.exception;
 
+import com.demo.matching.payment.common.toss.exception.enums.TossPaymentConfirmErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class TossPaymentConfirmException extends RuntimeException {

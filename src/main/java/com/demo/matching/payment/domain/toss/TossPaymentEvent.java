@@ -1,8 +1,8 @@
 package com.demo.matching.payment.domain.toss;
 
 import com.demo.matching.core.common.exception.BusinessException;
+import com.demo.matching.payment.common.toss.exception.TossPaymentException;
 import com.demo.matching.payment.domain.toss.enums.TossPaymentStatus;
-import com.demo.matching.payment.domain.toss.exception.TossPaymentException;
 import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
 import com.demo.matching.payment.presentation.toss.request.TossCheckoutRequest;
 import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 import static com.demo.matching.core.common.exception.BusinessResponseStatus.PAYMENT_SUCCESS_BUT_BIZ_FAILED;
+import static com.demo.matching.payment.common.toss.exception.enums.TossPaymentExceptionStatus.*;
 import static com.demo.matching.payment.domain.toss.enums.TossPaymentStatus.*;
-import static com.demo.matching.payment.domain.toss.exception.TossPaymentExceptionStatus.*;
 
 @Getter
 @Builder
@@ -94,9 +94,6 @@ public class TossPaymentEvent {
         this.tossPaymentStatus = SUCCESS_BUT_BIZ_FAILED;
     }
 
-    /**
-     * 결제 Exception 으로 변환 필요
-     */
     public void valid(TossPaymentInfo findResponse, TossConfirmRequest request) {
         if (isNotEqualsOrderId(findResponse.orderId(), request.orderId())) {
             throw new TossPaymentException(INVALID_ORDER_ID);
@@ -128,6 +125,20 @@ public class TossPaymentEvent {
 
     private boolean isRetryable() {
         return this.tossPaymentStatus != IN_PROGRESS && this.tossPaymentStatus != UNKNOWN;
+    }
+
+    public boolean isRetryable(LocalDateTime now) {
+        return (isRetryableInProgress(now) || this.tossPaymentStatus == UNKNOWN) &&
+                canAttemptRetryCount();
+    }
+
+    private boolean isRetryableInProgress(LocalDateTime now) {
+        return this.executedAt.plusMinutes(RETRYABLE_MINUTES_FOR_IN_PROGRESS).isBefore(now)
+                && this.tossPaymentStatus == IN_PROGRESS;
+    }
+
+    private boolean canAttemptRetryCount() {
+        return this.retryCount < RETRYABLE_LIMIT;
     }
 
     /* 세가지 상태 모두 아닐 경우 결제 진행 불가 ex ) DONE, EXPIRED */
@@ -169,5 +180,13 @@ public class TossPaymentEvent {
         return !this.paymentKey.equals(responsePaymentKey)
                 && !this.paymentKey.equals(requestPaymentKey)
                 && !requestPaymentKey.equals(responsePaymentKey);
+    }
+
+    public void increaseRetryCount() {
+        if (this.tossPaymentStatus != UNKNOWN &&
+                this.tossPaymentStatus != IN_PROGRESS) {
+            throw new TossPaymentException(INVALID_STATUS_TO_RETRY);
+        }
+        retryCount++;
     }
 }

@@ -1,12 +1,12 @@
 package com.demo.matching.payment.presentation.toss;
 
-import com.demo.matching.core.common.exception.BusinessResponse;
+import com.demo.matching.payment.common.toss.exception.PaymentResponse;
 import com.demo.matching.payment.presentation.toss.port.in.TossCheckoutService;
 import com.demo.matching.payment.presentation.toss.port.in.TossConfirmService;
-import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
 import com.demo.matching.payment.presentation.toss.request.TossCheckoutRequest;
-import com.demo.matching.payment.presentation.toss.response.TossConfirmResponse;
+import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
 import com.demo.matching.payment.presentation.toss.response.TossCheckoutResponse;
+import com.demo.matching.payment.presentation.toss.response.TossConfirmResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +22,8 @@ public class TossController {
     private final TossCheckoutService tossCheckoutService;
 
     @PostMapping("/checkout")
-    public BusinessResponse<TossCheckoutResponse> checkout(@RequestBody @Valid TossCheckoutRequest request) {
-        return new BusinessResponse(tossCheckoutService.checkoutPayment(request));
+    public PaymentResponse<TossCheckoutResponse> checkout(@RequestBody @Valid TossCheckoutRequest request) {
+        return new PaymentResponse(tossCheckoutService.checkoutPayment(request));
     }
 
     /**
@@ -36,7 +36,7 @@ public class TossController {
      * 6. 클라이언트에게 성공 내역 반환
      */
     @PostMapping("/confirm")
-    public BusinessResponse<TossConfirmResponse> confirm(@RequestBody @Valid TossConfirmRequest request) {
-        return new BusinessResponse<>(tossConfirmService.confirmPayment(request));
+    public PaymentResponse<TossConfirmResponse> confirm(@RequestBody @Valid TossConfirmRequest request) {
+        return new PaymentResponse<>(tossConfirmService.confirmPayment(request));
     }
 }

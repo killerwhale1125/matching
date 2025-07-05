@@ -1,7 +1,7 @@
 package com.demo.matching.payment.infrastructure.toss.interceptor;
 
-import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmException;
-import com.demo.matching.payment.domain.toss.exception.TossPaymentTimeoutException;
+import com.demo.matching.payment.common.toss.exception.TossPaymentConfirmException;
+import com.demo.matching.payment.common.toss.exception.TossPaymentTimeoutException;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;

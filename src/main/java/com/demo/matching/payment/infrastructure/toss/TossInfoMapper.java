@@ -1,10 +1,10 @@
 package com.demo.matching.payment.infrastructure.toss;
 
+import com.demo.matching.payment.infrastructure.toss.dto.TossConfirmApiResponse;
 import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
-import com.demo.matching.payment.presentation.toss.response.TossConfirmResponse;
 
 public class TossInfoMapper {
-    public static TossPaymentInfo from(TossConfirmResponse tossResponse) {
+    public static TossPaymentInfo from(TossConfirmApiResponse tossResponse) {
         return TossPaymentInfo.builder()
                 .orderId(tossResponse.orderId())
                 .totalAmount(tossResponse.totalAmount())

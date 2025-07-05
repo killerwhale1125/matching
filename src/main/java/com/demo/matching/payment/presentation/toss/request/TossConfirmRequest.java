@@ -1,7 +1,9 @@
 package com.demo.matching.payment.presentation.toss.request;
 
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 
+@Builder
 public record TossConfirmRequest(
         @NotNull(message = "회원 ID는 필수입니다.")
         Long memberId,

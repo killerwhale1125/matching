@@ -1,6 +1,6 @@
 package com.demo.matching.payment.presentation.toss.response;
 
-import com.demo.matching.payment.domain.toss.TossPayment;
+import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
 import lombok.Builder;
 
 @Builder
@@ -14,17 +14,16 @@ public record TossConfirmResponse(
         String requestedAt, // 결제 발생 날짜
         String approvedAt   // 결제 승인 날짜
 ) {
-    public static TossConfirmResponse from(TossPayment tossPayment) {
+    public static TossConfirmResponse from(TossPaymentInfo confirmResponse) {
         return TossConfirmResponse.builder()
-                .paymentKey(tossPayment.getTossPaymentKey())
-                .orderId(tossPayment.getOrderId())
-                .orderName(tossPayment.getOrderName())
-                .method(tossPayment.getTossPaymentMethod().name())
-                .totalAmount(tossPayment.getTotalAmount())
-                .status(tossPayment.getTossPaymentStatus().name())
-                .requestedAt(tossPayment.getRequestedAt().toString())
-                .requestedAt(tossPayment.getApprovedAt().toString())
+                .paymentKey(confirmResponse.paymentKey())
+                .orderId(confirmResponse.orderId())
+                .orderName(confirmResponse.orderName())
+                .method(confirmResponse.method())
+                .totalAmount(confirmResponse.totalAmount())
+                .status(confirmResponse.status())
+                .requestedAt(confirmResponse.requestedAt())
+                .approvedAt(confirmResponse.approvedAt())
                 .build();
-
     }
 }

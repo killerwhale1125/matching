@@ -7,7 +7,7 @@ import com.demo.matching.payment.domain.toss.TossPayment;
 import com.demo.matching.payment.domain.toss.TossPaymentEvent;
 import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
 import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
-import com.demo.matching.payment.presentation.toss.response.TossConfirmResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class TossPaymentExecutorUseCase {
     }
 
     /* 결제 승인 완료 후 결제 상태 변경 */
-    public void markPaymentAsSuccess(TossPaymentEvent paymentEvent, TossConfirmResponse response) {
+    public void markPaymentAsSuccess(TossPaymentEvent paymentEvent, TossPaymentInfo response) {
         paymentEvent.success(response.approvedAt());
         tossPaymentEventRepository.save(paymentEvent);
         TossPayment tossPayment = TossPayment.create(paymentEvent.getBuyerId(), paymentEvent.getOrderName(), response);
@@ -55,5 +55,12 @@ public class TossPaymentExecutorUseCase {
 
     public void validateBeforeConfirm(TossPaymentEvent paymentEvent, TossPaymentInfo findResponse, TossConfirmRequest request) {
         paymentEvent.valid(findResponse, request);
+    }
+
+    /* 재시도 횟수 증가 */
+    @Transactional
+    public void increaseRetryCount(TossPaymentEvent paymentEvent) {
+        paymentEvent.increaseRetryCount();
+        tossPaymentEventRepository.save(paymentEvent);
     }
 }
