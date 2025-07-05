@@ -1,6 +1,6 @@
 package com.demo.matching.member.infrastructure.entity;
 
-import com.demo.matching.common.jpa.BaseTimeEntity;
+import com.demo.matching.core.common.infrastructure.BaseTimeEntity;
 import com.demo.matching.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,6 +30,8 @@ public class MemberEntity extends BaseTimeEntity {
         MemberEntity entity = new MemberEntity();
         entity.id = member.getId();
         entity.name = member.getName();
+        entity.createdTime = member.getCreatedTime();
+        entity.modifiedTime = member.getModifiedTime();
         return entity;
     }
 
@@ -38,6 +40,8 @@ public class MemberEntity extends BaseTimeEntity {
         return Member.builder()
                 .id(id)
                 .name(name)
+                .createdTime(createdTime)
+                .modifiedTime(modifiedTime)
                 .build();
     }
 }
