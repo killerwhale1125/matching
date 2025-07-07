@@ -5,6 +5,7 @@ import com.demo.matching.core.common.service.port.LocalDateTimeProvider;
 import com.demo.matching.profile.application.port.in.ProfileRepository;
 import com.demo.matching.profile.application.port.in.ProfileViewCountHistoryRepository;
 import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
+import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.domain.ProfileViewCountHistory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,16 +49,23 @@ public class ProfileViewCountRecoverySchedulerTest {
         LocalDate yesterday = today.minusDays(1);
         String redisKey = "profile:view:1:" + yesterday;
         Long profileId = 1L;
+        Integer viewCount = 100;
+
+        Profile mockProfile = mock(Profile.class);
+
         when(profileViewCountPort.getYesterdayKeys(yesterday)).thenReturn(Set.of(redisKey));
-        when(profileViewCountPort.getViewCountFromRedis(redisKey)).thenReturn(100);
-        when(profileRepository.syncUpdateViewCountBy(profileId, 100)).thenReturn(1);
+        when(profileViewCountPort.getViewCountFromRedis(redisKey)).thenReturn(viewCount);
+        when(profileRepository.findById(profileId)).thenReturn(mockProfile);
 
         // when
-        scheduler.recoverProfileViewCount(today);
+        List<ProfileViewCountHistory> result = scheduler.recoverProfileViewCount(today);
 
         // then
+        verify(mockProfile).syncViewCount(viewCount);
+        verify(profileRepository).save(mockProfile);
         verify(profileViewCountPort).deleteRedisKey(redisKey);
         verify(profileViewCountHistoryRepository, never()).saveAll(any());
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -67,18 +75,19 @@ public class ProfileViewCountRecoverySchedulerTest {
         LocalDate today = mockLocalDateTimeProvider.now().toLocalDate();
         LocalDate yesterday = today.minusDays(1);
         String redisKey = "profile:view:1:" + yesterday;
+        Long profileId = 1L;
 
         when(profileViewCountPort.getYesterdayKeys(yesterday)).thenReturn(Set.of(redisKey));
         when(profileViewCountPort.getViewCountFromRedis(redisKey)).thenReturn(100);
-        when(profileRepository.syncUpdateViewCountBy(1L, 100)).thenReturn(0); // 동기화 실패
+        when(profileRepository.findById(profileId)).thenThrow(new RuntimeException("DB 실패"));
 
         // when
         List<ProfileViewCountHistory> result = scheduler.recoverProfileViewCount(today);
 
         // then
-
+        verify(profileViewCountHistoryRepository).saveAll(any());
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getProfileId()).isEqualTo(1L);
+        assertThat(result.get(0).getProfileId()).isEqualTo(profileId);
         assertThat(result.get(0).getLossDate()).isEqualTo(yesterday);
     }
 
@@ -94,10 +103,28 @@ public class ProfileViewCountRecoverySchedulerTest {
         when(profileViewCountPort.getViewCountFromRedis(redisKey)).thenReturn(null);
 
         // when
-        scheduler.recoverProfileViewCount(today);
+        List<ProfileViewCountHistory> result = scheduler.recoverProfileViewCount(today);
 
         // then
-        verify(profileRepository, never()).syncUpdateViewCountBy(anyLong(), anyInt());
+        verify(profileViewCountPort).deleteRedisKey(redisKey);
         verify(profileViewCountHistoryRepository, never()).saveAll(any());
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("조회수 key 리스트가 비어있으면 아무것도 하지 않는다.")
+    void shouldReturnEmptyWhenNoRedisKeys() {
+        // given
+        LocalDate today = mockLocalDateTimeProvider.now().toLocalDate();
+        LocalDate yesterday = today.minusDays(1);
+        when(profileViewCountPort.getYesterdayKeys(yesterday)).thenReturn(Set.of());
+
+        // when
+        List<ProfileViewCountHistory> result = scheduler.recoverProfileViewCount(today);
+
+        // then
+        assertThat(result).isEmpty();
+        verifyNoInteractions(profileRepository);
+        verifyNoInteractions(profileViewCountHistoryRepository);
     }
 }
