@@ -22,19 +22,6 @@
 
 url : /api/profiles/{profileId}
 
-1. 오늘 날짜 기준 Redis 키 존재 여부 확인
-- Redis에 profile:view:{profileId}:{yyyyMMdd} 형태의 키가 존재하는지 확인합니다.
+![image](https://github.com/user-attachments/assets/0dfbc278-3e3a-4fdc-b203-dd2904c3f61c)
 
-2. 오늘자 키가 존재하는 경우 (Cache Hit)
-- Redis의 INCR 명령어 원자적(atomic) 으로 +1 증가시킵니다.
-
-3. 오늘자 키가 존재하지 않는 경우 (Cache Miss)
-- 먼저 어제 날짜의 Redis 키를 조회하여 이전 조회수를 참조합니다. (새벽 1시 스케줄링이 진행되지만, DB와 동기화 안되어 있을 가능성으로 인해)
-- 어제 날짜의 키도 없을 경우 DB에서 현재 조회수를 조회합니다.
-- 이후 다음과 같이 Redis에 캐싱을 시도합니다:
-  - Redis의 setIfAbsent를 사용해 viewCount + 1을 신규 삽입 시도합니다.
-  - 만약 이미 다른 쓰레드나 요청에서 키가 삽입된 경우 (setIfAbsent 실패),
-    INCR을 다시 수행하여 정확하게 +1 증가시킵니다.
-
-4. 최종적으로 증가된 조회수 값을 Profile 객체에 반영하여 반환합니다.
 
