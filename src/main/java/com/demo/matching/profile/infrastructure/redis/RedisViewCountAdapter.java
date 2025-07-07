@@ -5,7 +5,7 @@ import com.demo.matching.core.common.exception.BusinessResponseStatus;
 import com.demo.matching.core.common.service.port.LocalDateTimeProvider;
 import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
 import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.application.dto.MemberProfile;
 import com.demo.matching.profile.infrastructure.repository.ProfileJpaRepository;
 import com.demo.matching.profile.infrastructure.repository.ProfileViewCountHistoryJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,9 +60,10 @@ public class RedisViewCountAdapter implements ProfileViewCountPort {
 
             int finalViewCount;
 
-            /* Redis에 값이 없었으므로 새로 캐싱 시도 (중복 삽입 방지) */
+            /* Redis에 값이 없었으므로 새로 캐싱 시도 (동시성 중복 삽입 방지) */
             boolean isInsert = integerRedisTemplate.opsForValue().setIfAbsent(redisKey, viewCount + 1);
 
+            /* 응답용 viewCount (동시성으로 이미 캐싱되었을 경우 반환값 매핑 시 Redis INCR 조회수 증가 후 값 사용 */
             finalViewCount = isInsert
                     ? viewCount + 1
                     : integerRedisTemplate.opsForValue().increment(redisKey).intValue();
