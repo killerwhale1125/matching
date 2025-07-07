@@ -22,6 +22,9 @@
 
 url : /api/profiles/{profileId}
 
-![image](https://github.com/user-attachments/assets/0dfbc278-3e3a-4fdc-b203-dd2904c3f61c)
+조회수 증가 처리 흐름
+
+![image](https://github.com/user-attachments/assets/2f0b1b85-499e-49e7-a7d8-75383857df6d)
+
 
 
