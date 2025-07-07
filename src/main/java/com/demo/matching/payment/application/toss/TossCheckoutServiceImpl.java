@@ -2,12 +2,11 @@ package com.demo.matching.payment.application.toss;
 
 import com.demo.matching.core.common.service.port.UUIDProvider;
 import com.demo.matching.payment.application.toss.port.in.TossPaymentEventRepository;
-import com.demo.matching.payment.application.toss.port.in.TossPaymentRepository;
 import com.demo.matching.payment.application.usecase.OrderedMemberUseCase;
 import com.demo.matching.payment.domain.toss.TossPaymentEvent;
 import com.demo.matching.payment.domain.toss.dto.MemberInfo;
 import com.demo.matching.payment.infrastructure.toss.properties.TossProperties;
-import com.demo.matching.payment.presentation.toss.port.in.TossCheckoutService;
+import com.demo.matching.payment.presentation.port.in.TossCheckoutService;
 import com.demo.matching.payment.presentation.toss.request.TossCheckoutRequest;
 import com.demo.matching.payment.presentation.toss.response.TossCheckoutResponse;
 import jakarta.transaction.Transactional;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TossCheckoutServiceImpl implements TossCheckoutService {
 
-    private final TossPaymentRepository tossPaymentRepository;
     private final TossPaymentEventRepository tossPaymentEventRepository;
     private final TossProperties tossProperties;
     private final OrderedMemberUseCase orderedMemberUseCase;

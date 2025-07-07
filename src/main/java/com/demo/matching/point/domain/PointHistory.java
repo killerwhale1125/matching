@@ -13,15 +13,17 @@ import static com.demo.matching.point.domain.enums.PointHistoryType.*;
 public class PointHistory {
     private Long id;
     private Long memberId;
+    private String orderId;
     private long amount;
     private PointHistoryType type;
     private LocalDateTime approvedAt;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
 
-    public static PointHistory create(Long memberId, long amount, LocalDateTime approvedAt) {
+    public static PointHistory create(Long memberId, String orderId, long amount, LocalDateTime approvedAt) {
         return PointHistory.builder()
                 .memberId(memberId)
+                .orderId(orderId)
                 .amount(amount)
                 .type(CHARGE)
                 .approvedAt(approvedAt)

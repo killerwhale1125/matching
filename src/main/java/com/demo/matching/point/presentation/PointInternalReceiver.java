@@ -13,11 +13,15 @@ public class PointInternalReceiver {
 
     private final PointService pointService;
 
-    public void chargePoint(Long memberId, long amount, LocalDateTime approvedAt) {
-        pointService.charge(memberId, amount, approvedAt);
-    }
-
     public PointInfo createBy(Long memberId) {
         return pointService.createBy(memberId);
+    }
+
+    public void chargePoint(Long memberId, String orderId, long amount, LocalDateTime approvedAt) {
+        pointService.charge(memberId, orderId, amount, approvedAt);
+    }
+
+    public boolean alreadyCharged(String orderId) {
+        return pointService.existsByOrderId(orderId);
     }
 }

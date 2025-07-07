@@ -1,9 +1,9 @@
 package com.demo.matching.payment.domain.toss;
 
 import com.demo.matching.core.common.exception.BusinessException;
-import com.demo.matching.payment.common.toss.exception.TossPaymentException;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentException;
 import com.demo.matching.payment.domain.toss.enums.TossPaymentStatus;
-import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
+import com.demo.matching.payment.domain.toss.dto.TossPaymentInfo;
 import com.demo.matching.payment.presentation.toss.request.TossCheckoutRequest;
 import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
 import lombok.Builder;
@@ -20,8 +20,8 @@ import static com.demo.matching.payment.domain.toss.enums.TossPaymentStatus.*;
 @Builder
 public class TossPaymentEvent {
 
-    /* 결제 재시도가 5분 까지만 가능함 */
-    public static final int RETRYABLE_MINUTES_FOR_IN_PROGRESS = 5;
+    /* 3분 후 결제 재시도 */
+    public static final int RETRYABLE_MINUTES_FOR_IN_PROGRESS = 2;
     /* 결제 재시도 5번만 가능  */
     public static final int RETRYABLE_LIMIT = 5;
 
@@ -33,6 +33,7 @@ public class TossPaymentEvent {
     private long amount;
     private TossPaymentStatus tossPaymentStatus;
     private LocalDateTime executedAt;
+    private LocalDateTime requestedAt;
     private LocalDateTime approvedAt;
     private Integer retryCount;
     private LocalDateTime createdTime;
@@ -61,11 +62,12 @@ public class TossPaymentEvent {
         markAsInProgress(paymentKey, executedAt);
     }
 
-    public void success(String approvedAt) {
+    public void success(TossPaymentInfo confirmInfo) {
         if (isNotSuccessProcessable()) {
             throw new TossPaymentException(PAYMENT_INVALID_STATUS_SUCCESS);
         }
-        this.approvedAt = OffsetDateTime.parse(approvedAt).toLocalDateTime();
+        this.requestedAt = OffsetDateTime.parse(confirmInfo.requestedAt()).toLocalDateTime();
+        this.approvedAt = OffsetDateTime.parse(confirmInfo.approvedAt()).toLocalDateTime();
         this.tossPaymentStatus = DONE;
     }
 
@@ -88,7 +90,8 @@ public class TossPaymentEvent {
     }
 
     public void businessFail() {
-        if (this.tossPaymentStatus != DONE && this.tossPaymentStatus != IN_PROGRESS) {
+        // IN_PROGRESS 상태일 때만 포인트 충전이 안되었다고 판단하여 재시도 로직 가능
+        if (this.tossPaymentStatus == IN_PROGRESS) {
             throw new BusinessException(PAYMENT_SUCCESS_BUT_BIZ_FAILED);
         }
         this.tossPaymentStatus = SUCCESS_BUT_BIZ_FAILED;
@@ -124,35 +127,38 @@ public class TossPaymentEvent {
     }
 
     private boolean isRetryable() {
-        return this.tossPaymentStatus != IN_PROGRESS && this.tossPaymentStatus != UNKNOWN;
+        return this.tossPaymentStatus == IN_PROGRESS || this.tossPaymentStatus == UNKNOWN;
     }
 
+    /* 재시도 가능 하고, 재시도 횟수가 5 미만일 경우에는 최종적으로 재시도 가능 */
     public boolean isRetryable(LocalDateTime now) {
         return (isRetryableInProgress(now) || this.tossPaymentStatus == UNKNOWN) &&
                 canAttemptRetryCount();
     }
 
+    /* 5분이 지난 IN_PROGRESS 상태이거나 IN_PROGRESS 상태일 경우 재시도 가능 */
     private boolean isRetryableInProgress(LocalDateTime now) {
         return this.executedAt.plusMinutes(RETRYABLE_MINUTES_FOR_IN_PROGRESS).isBefore(now)
                 && this.tossPaymentStatus == IN_PROGRESS;
     }
 
+    /* 재시도 횟수 확인 */
     private boolean canAttemptRetryCount() {
         return this.retryCount < RETRYABLE_LIMIT;
     }
 
     /* 세가지 상태 모두 아닐 경우 결제 진행 불가 ex ) DONE, EXPIRED */
     private boolean isNotExecutableStatus() {
-        return this.tossPaymentStatus != READY
-                && this.tossPaymentStatus != IN_PROGRESS
-                && this.tossPaymentStatus != UNKNOWN;
+        return !(tossPaymentStatus == READY
+                || tossPaymentStatus == IN_PROGRESS
+                || tossPaymentStatus == UNKNOWN);
     }
 
     /* 세가지 상태 모두 아닐 경우 결제 완료 불가 */
     private boolean isNotSuccessProcessable() {
-        return this.tossPaymentStatus != TossPaymentStatus.DONE
-                && this.tossPaymentStatus != TossPaymentStatus.IN_PROGRESS
-                && this.tossPaymentStatus != TossPaymentStatus.UNKNOWN;
+        return !(tossPaymentStatus == DONE
+                || tossPaymentStatus == IN_PROGRESS
+                || tossPaymentStatus == UNKNOWN);
     }
 
     private boolean isNotEqualsOrderId(String responseOrderId, String requestOrderId) {
@@ -171,15 +177,17 @@ public class TossPaymentEvent {
     }
 
     private boolean isNotEqualsAmount(long responseAmount, long requestAmount) {
-        return this.amount != responseAmount
-                && this.amount != requestAmount
-                && requestAmount!= responseAmount;
+        boolean allMatch = this.amount == responseAmount
+                && this.amount == requestAmount
+                && responseAmount == requestAmount;
+        return !allMatch;
     }
 
     private boolean isNotEqualsPaymentKey(String responsePaymentKey, String requestPaymentKey) {
-        return !this.paymentKey.equals(responsePaymentKey)
-                && !this.paymentKey.equals(requestPaymentKey)
-                && !requestPaymentKey.equals(responsePaymentKey);
+        boolean allMatch = this.paymentKey.equals(responsePaymentKey)
+                && this.paymentKey.equals(requestPaymentKey)
+                && responsePaymentKey.equals(requestPaymentKey);
+        return !allMatch;
     }
 
     public void increaseRetryCount() {

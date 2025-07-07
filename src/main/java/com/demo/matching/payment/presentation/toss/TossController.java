@@ -1,8 +1,8 @@
 package com.demo.matching.payment.presentation.toss;
 
-import com.demo.matching.payment.common.toss.exception.PaymentResponse;
-import com.demo.matching.payment.presentation.toss.port.in.TossCheckoutService;
-import com.demo.matching.payment.presentation.toss.port.in.TossConfirmService;
+import com.demo.matching.payment.presentation.toss.response.PaymentResponse;
+import com.demo.matching.payment.presentation.port.in.TossCheckoutService;
+import com.demo.matching.payment.presentation.port.in.TossConfirmService;
 import com.demo.matching.payment.presentation.toss.request.TossCheckoutRequest;
 import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
 import com.demo.matching.payment.presentation.toss.response.TossCheckoutResponse;

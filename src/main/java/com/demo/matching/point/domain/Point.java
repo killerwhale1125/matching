@@ -1,9 +1,12 @@
 package com.demo.matching.point.domain;
 
+import com.demo.matching.core.common.exception.BusinessException;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+
+import static com.demo.matching.core.common.exception.BusinessResponseStatus.INVALID_POINT_AMOUNT;
 
 @Getter
 @Builder
@@ -21,7 +24,10 @@ public class Point {
                 .build();
     }
 
-    public Point incrementPoint(long amount) {
+    public Point  incrementPoint(long amount) {
+        if (amount < 0) {
+            throw new BusinessException(INVALID_POINT_AMOUNT);
+        }
         this.point += amount;
         return this;
     }

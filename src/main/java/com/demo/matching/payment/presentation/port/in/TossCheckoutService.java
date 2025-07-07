@@ -1,4 +1,4 @@
-package com.demo.matching.payment.presentation.toss.port.in;
+package com.demo.matching.payment.presentation.port.in;
 
 import com.demo.matching.payment.presentation.toss.request.TossCheckoutRequest;
 import com.demo.matching.payment.presentation.toss.response.TossCheckoutResponse;

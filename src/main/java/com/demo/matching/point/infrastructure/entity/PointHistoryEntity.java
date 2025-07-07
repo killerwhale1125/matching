@@ -25,6 +25,7 @@ public class PointHistoryEntity extends BaseTimeEntity {
     private PointHistoryType type;
 
     private Long memberId;
+    private String orderId;
     private long amount;
 
     public static PointHistoryEntity from(PointHistory pointHistory) {
@@ -32,6 +33,7 @@ public class PointHistoryEntity extends BaseTimeEntity {
         entity.id = pointHistory.getId();
         entity.type = pointHistory.getType();
         entity.memberId = pointHistory.getMemberId();
+        entity.orderId = pointHistory.getOrderId();
         entity.amount = pointHistory.getAmount();
         entity.createdTime = pointHistory.getCreatedTime();
         entity.modifiedTime = pointHistory.getModifiedTime();
@@ -43,6 +45,7 @@ public class PointHistoryEntity extends BaseTimeEntity {
                 .id(id)
                 .type(type)
                 .memberId(memberId)
+                .orderId(orderId)
                 .amount(amount)
                 .createdTime(createdTime)
                 .modifiedTime(modifiedTime)

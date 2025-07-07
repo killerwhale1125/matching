@@ -1,6 +1,6 @@
 package com.demo.matching.payment.presentation.toss.response;
 
-import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
+import com.demo.matching.payment.domain.toss.dto.TossPaymentInfo;
 import lombok.Builder;
 
 @Builder

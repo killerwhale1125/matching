@@ -15,12 +15,17 @@ public class InternalPointProvider implements PointProvider {
     private final PointInternalReceiver pointInternalReceiver;
 
     @Override
-    public void chargePoint(Long memberId, long amount, LocalDateTime approvedAt) {
-        pointInternalReceiver.chargePoint(memberId, amount, approvedAt);
+    public void chargePoint(Long memberId, String orderId, long amount, LocalDateTime approvedAt) {
+        pointInternalReceiver.chargePoint(memberId, orderId, amount, approvedAt);
     }
 
     @Override
     public PointInfo createBy(Long memberId) {
         return pointInternalReceiver.createBy(memberId);
+    }
+
+    @Override
+    public boolean alreadyCharged(String orderId) {
+        return pointInternalReceiver.alreadyCharged(orderId);
     }
 }

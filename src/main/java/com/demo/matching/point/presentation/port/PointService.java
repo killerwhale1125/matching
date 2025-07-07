@@ -5,7 +5,9 @@ import com.demo.matching.member.domain.dto.PointInfo;
 import java.time.LocalDateTime;
 
 public interface PointService {
-    void charge(Long memberId, long amount, LocalDateTime approvedAt);
+    void charge(Long memberId, String orderId, long amount, LocalDateTime approvedAt);
 
     PointInfo createBy(Long memberId);
+
+    boolean existsByOrderId(String orderId);
 }

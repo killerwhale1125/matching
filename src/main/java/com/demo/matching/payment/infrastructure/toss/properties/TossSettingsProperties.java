@@ -1,9 +1,9 @@
-package com.demo.matching.payment.infrastructure.toss;
+package com.demo.matching.payment.infrastructure.toss.properties;
 
 import lombok.Getter;
 
 @Getter
-public enum TossSettingsPrefix {
+public enum TossSettingsProperties {
     CONNECT_TIMEOUT_SECONDS(1000000),
     READ_TIMEOUT_SECONDS(1000000),
     AUTH_HEADER_PREFIX("Basic "),
@@ -13,11 +13,11 @@ public enum TossSettingsPrefix {
     private String prefix;
 
 
-    TossSettingsPrefix(String prefix) {
+    TossSettingsProperties(String prefix) {
         this.prefix = prefix;
     }
 
-    TossSettingsPrefix(int time) {
+    TossSettingsProperties(int time) {
         this.time = time;
     }
 }

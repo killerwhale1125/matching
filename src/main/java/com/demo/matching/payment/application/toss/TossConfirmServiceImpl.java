@@ -6,12 +6,12 @@ import com.demo.matching.payment.application.toss.usecase.TossPaymentExecutorUse
 import com.demo.matching.payment.application.toss.usecase.TossPaymentFinalizerUseCase;
 import com.demo.matching.payment.application.toss.usecase.TossPaymentSelectUseCase;
 import com.demo.matching.payment.application.usecase.OrderedMemberUseCase;
-import com.demo.matching.payment.common.toss.exception.TossPaymentConfirmException;
-import com.demo.matching.payment.common.toss.exception.TossPaymentException;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmException;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentException;
 import com.demo.matching.payment.common.toss.exception.enums.TossPaymentExceptionStatus;
 import com.demo.matching.payment.domain.toss.TossPaymentEvent;
-import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
-import com.demo.matching.payment.presentation.toss.port.in.TossConfirmService;
+import com.demo.matching.payment.domain.toss.dto.TossPaymentInfo;
+import com.demo.matching.payment.presentation.port.in.TossConfirmService;
 import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
 import com.demo.matching.payment.presentation.toss.response.TossConfirmResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class TossConfirmServiceImpl implements TossConfirmService {
         tossPaymentExecutorUseCase.execute(paymentEvent, request);
 
         try {
-            // Toss 결제 정보 확인 및 검증
+            // Toss 결제 정보 확인 및 멱등성 검증
             TossPaymentInfo tossInfo = tossApiClientPort.findPaymentByPaymentKey(request.paymentKey());
             tossPaymentExecutorUseCase.validateBeforeConfirm(paymentEvent, tossInfo, request);
 

@@ -1,4 +1,4 @@
-package com.demo.matching.payment.common.toss.exception;
+package com.demo.matching.payment.domain.toss.exception;
 
 import java.io.IOException;
 

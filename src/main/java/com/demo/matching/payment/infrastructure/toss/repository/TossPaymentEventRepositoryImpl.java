@@ -2,7 +2,7 @@ package com.demo.matching.payment.infrastructure.toss.repository;
 
 import com.demo.matching.payment.application.toss.port.in.TossPaymentEventRepository;
 import com.demo.matching.payment.domain.toss.TossPaymentEvent;
-import com.demo.matching.payment.common.toss.exception.TossPaymentException;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentException;
 import com.demo.matching.payment.infrastructure.toss.entity.TossPaymentEventEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.demo.matching.payment.common.toss.exception.enums.TossPaymentExceptionStatus.PAYMENT_EVENT_NOT_FOUND;
+import static com.demo.matching.payment.domain.toss.enums.TossPaymentStatus.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class TossPaymentEventRepositoryImpl implements TossPaymentEventRepositor
     @Override
     public List<TossPaymentEvent> findDelayedInProgressOrUnknownEvents(LocalDateTime before) {
         return tossPaymentEventJpaRepository
-                .findByInProgressWithTimeConstraintOrUnknown(before)
+                .findByInProgressWithTimeConstraintOrUnknown(before, IN_PROGRESS, UNKNOWN)
                 .stream()
                 .map(TossPaymentEventEntity::to)
                 .toList();

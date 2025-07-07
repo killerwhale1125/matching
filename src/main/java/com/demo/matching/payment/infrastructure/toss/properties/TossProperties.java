@@ -17,4 +17,21 @@ public class TossProperties {
     private String failUrl;
     private String confirmEndpoint;
     private String validEndpoint;
+
+    // 테스트 전용 생성자
+    public TossProperties(String secretKey, String clientKey, String baseUrl,
+                          String successUrl, String failUrl,
+                          String confirmEndpoint, String validEndpoint) {
+        this.secretKey = secretKey;
+        this.clientKey = clientKey;
+        this.baseUrl = baseUrl;
+        this.successUrl = successUrl;
+        this.failUrl = failUrl;
+        this.confirmEndpoint = confirmEndpoint;
+        this.validEndpoint = validEndpoint;
+    }
+
+    // 기본 생성자도 있어야 합니다.
+    public TossProperties() {
+    }
 }

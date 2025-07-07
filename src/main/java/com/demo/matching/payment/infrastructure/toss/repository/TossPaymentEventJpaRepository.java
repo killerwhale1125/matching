@@ -1,5 +1,6 @@
 package com.demo.matching.payment.infrastructure.toss.repository;
 
+import com.demo.matching.payment.domain.toss.enums.TossPaymentStatus;
 import com.demo.matching.payment.infrastructure.toss.entity.TossPaymentEventEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,8 +16,12 @@ public interface TossPaymentEventJpaRepository extends JpaRepository<TossPayment
     
     /* 5분 전 & 결제 가능 상태의 결제 이력 조회 (UNKNOWN -> 날짜 기록 없음 )*/
     @Query("SELECT pe " +
-            "FROM PaymentEventEntity pe " +
-            "WHERE ((pe.status = 'IN_PROGRESS' AND pe.executedAt < :before) " +
-            "OR pe.status = 'UNKNOWN')")
-    List<TossPaymentEventEntity> findByInProgressWithTimeConstraintOrUnknown(@Param("before") LocalDateTime before);
+            "FROM TossPaymentEventEntity pe " +
+            "WHERE ((pe.tossPaymentStatus = :inProgress AND pe.executedAt < :before) " +
+            "OR pe.tossPaymentStatus = :unknown)")
+    List<TossPaymentEventEntity> findByInProgressWithTimeConstraintOrUnknown(
+            @Param("before") LocalDateTime before,
+            @Param("inProgress") TossPaymentStatus inProgress,
+            @Param("unknown") TossPaymentStatus unknown
+    );
 }

@@ -13,7 +13,12 @@ public class PointHistoryRepositoryImpl implements PointHistoryRepository {
     private final PointHistoryJpaRepository pointHistoryJpaRepository;
 
     @Override
-    public void save(PointHistory pointHistory) {
-        pointHistoryJpaRepository.save(PointHistoryEntity.from(pointHistory));
+    public PointHistory save(PointHistory pointHistory) {
+        return pointHistoryJpaRepository.save(PointHistoryEntity.from(pointHistory)).to();
+    }
+
+    @Override
+    public boolean existsByOrderId(String orderId) {
+        return pointHistoryJpaRepository.existsByOrderId(orderId);
     }
 }

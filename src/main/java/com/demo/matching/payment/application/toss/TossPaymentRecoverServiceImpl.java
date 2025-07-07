@@ -3,19 +3,21 @@ package com.demo.matching.payment.application.toss;
 import com.demo.matching.core.common.service.port.LocalDateTimeProvider;
 import com.demo.matching.payment.application.toss.port.in.TossApiClientPort;
 import com.demo.matching.payment.application.toss.usecase.TossPaymentExecutorUseCase;
+import com.demo.matching.payment.application.toss.usecase.TossPaymentFinalizerUseCase;
 import com.demo.matching.payment.application.toss.usecase.TossPaymentSelectUseCase;
-import com.demo.matching.payment.common.toss.exception.TossPaymentConfirmException;
-import com.demo.matching.payment.common.toss.exception.TossPaymentException;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmException;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentException;
 import com.demo.matching.payment.domain.toss.TossPaymentEvent;
+import com.demo.matching.payment.domain.toss.dto.TossPaymentInfo;
 import com.demo.matching.payment.domain.toss.enums.TossPaymentConfirmResultStatus;
-import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
 import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
-import com.demo.matching.payment.scheduler.toss.port.TossPaymentRecoveryService;
+import com.demo.matching.payment.scheduler.port.TossPaymentRecoveryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.demo.matching.payment.common.toss.exception.enums.TossPaymentConfirmErrorCode.ALREADY_PROCESSED_PAYMENT;
 import static com.demo.matching.payment.common.toss.exception.enums.TossPaymentExceptionStatus.NON_RETRYABLE_ERROR;
 import static com.demo.matching.payment.common.toss.exception.enums.TossPaymentExceptionStatus.RETRYABLE_ERROR;
 
@@ -24,6 +26,7 @@ import static com.demo.matching.payment.common.toss.exception.enums.TossPaymentE
 public class TossPaymentRecoverServiceImpl implements TossPaymentRecoveryService {
     private final TossPaymentSelectUseCase tossPaymentSelectUseCase;
     private final TossPaymentExecutorUseCase tossPaymentExecutorUseCase;
+    private final TossPaymentFinalizerUseCase tossPaymentFinalizerUseCase;
     private final TossApiClientPort tossApiClientPort;
     private final LocalDateTimeProvider localDateTimeProvider;
 
@@ -35,7 +38,7 @@ public class TossPaymentRecoverServiceImpl implements TossPaymentRecoveryService
     private void processRetryablePaymentEvent(TossPaymentEvent retryableEvent) {
         try {
             /* 재시도 불가능한 상태일 경우 */
-            if (retryableEvent.isRetryable(localDateTimeProvider.now())) {
+            if (!retryableEvent.isRetryable(localDateTimeProvider.now())) {
                 throw new TossPaymentException(NON_RETRYABLE_ERROR);
             }
             /* 재시도 횟수 증가 */
@@ -48,7 +51,7 @@ public class TossPaymentRecoverServiceImpl implements TossPaymentRecoveryService
             checkResultStatus(confirmResult);
 
             /* 최종 결제 완료 처리 */
-            tossPaymentExecutorUseCase.markPaymentAsSuccess(retryableEvent, confirmResult);
+            tossPaymentFinalizerUseCase.finalizeSuccess(retryableEvent, confirmResult);
         } catch (TossPaymentConfirmException e) {
             handleConfirmException(e, retryableEvent);
         } catch (TossPaymentException e) {
@@ -75,6 +78,12 @@ public class TossPaymentRecoverServiceImpl implements TossPaymentRecoveryService
     }
 
     private void handleConfirmException(TossPaymentConfirmException e, TossPaymentEvent paymentEvent) {
+        /* 이미 Toss 측 결제 완료 상태 */
+        if (e.getErrorCode() == ALREADY_PROCESSED_PAYMENT) {
+            tossPaymentFinalizerUseCase.markPaymentAsSuccessIfNotYet(paymentEvent);
+            return;
+        }
+
         if (e.getErrorCode().isRetryableError()) {
             tossPaymentExecutorUseCase.markAsUnknown(paymentEvent);
         }
@@ -83,6 +92,7 @@ public class TossPaymentRecoverServiceImpl implements TossPaymentRecoveryService
     private void handlePaymentException(TossPaymentException e, TossPaymentEvent paymentEvent) {
         if (e.getErrorStatus().isRetryableStatus()) {
             tossPaymentExecutorUseCase.markAsUnknown(paymentEvent);
+            return;
         }
         tossPaymentExecutorUseCase.markAsFail(paymentEvent);
     }

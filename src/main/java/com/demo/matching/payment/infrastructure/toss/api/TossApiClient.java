@@ -1,13 +1,13 @@
 package com.demo.matching.payment.infrastructure.toss.api;
 
 import com.demo.matching.payment.application.toss.port.in.TossApiClientPort;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmException;
 import com.demo.matching.payment.common.toss.exception.enums.TossPaymentConfirmErrorCode;
-import com.demo.matching.payment.common.toss.exception.TossPaymentConfirmException;
-import com.demo.matching.payment.infrastructure.toss.TossInfoMapper;
+import com.demo.matching.payment.domain.toss.dto.TossPaymentInfo;
+import com.demo.matching.payment.infrastructure.interceptor.PaymentExceptionInterceptor;
 import com.demo.matching.payment.infrastructure.toss.dto.TossConfirmApiResponse;
 import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentFailOutput;
-import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
-import com.demo.matching.payment.infrastructure.toss.interceptor.PaymentExceptionInterceptor;
+import com.demo.matching.payment.infrastructure.toss.mapper.TossInfoMapper;
 import com.demo.matching.payment.infrastructure.toss.properties.TossProperties;
 import com.demo.matching.payment.presentation.toss.request.TossConfirmRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
-import static com.demo.matching.payment.infrastructure.toss.TossSettingsPrefix.*;
+import static com.demo.matching.payment.infrastructure.toss.properties.TossSettingsProperties.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**

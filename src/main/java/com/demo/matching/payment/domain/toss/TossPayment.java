@@ -2,7 +2,7 @@ package com.demo.matching.payment.domain.toss;
 
 import com.demo.matching.payment.domain.toss.enums.TossPaymentMethod;
 import com.demo.matching.payment.domain.toss.enums.TossPaymentStatus;
-import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentInfo;
+import com.demo.matching.payment.domain.toss.dto.TossPaymentInfo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,13 +25,13 @@ public class TossPayment {
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
 
-    public static TossPayment create(Long buyerId, String orderName, TossPaymentInfo response) {
+    public static TossPayment create(Long buyerId, TossPaymentInfo response) {
         return TossPayment.builder()
                 .memberId(buyerId)
                 .tossPaymentKey(response.paymentKey())
                 .orderId(response.orderId())
                 .totalAmount(response.totalAmount())
-                .orderName(orderName)
+                .orderName(response.orderName())
                 .tossPaymentMethod(TossPaymentMethod.fromDisplayName(response.method()))
                 .tossPaymentStatus(TossPaymentStatus.fromString(response.status()))
                 .requestedAt(OffsetDateTime.parse(response.requestedAt()).toLocalDateTime())

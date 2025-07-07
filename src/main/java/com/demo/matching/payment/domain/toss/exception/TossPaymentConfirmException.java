@@ -1,8 +1,10 @@
-package com.demo.matching.payment.common.toss.exception;
+package com.demo.matching.payment.domain.toss.exception;
 
 import com.demo.matching.payment.common.toss.exception.enums.TossPaymentConfirmErrorCode;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class TossPaymentConfirmException extends RuntimeException {
     private final TossPaymentConfirmErrorCode errorCode;
 
@@ -15,10 +17,6 @@ public class TossPaymentConfirmException extends RuntimeException {
     public TossPaymentConfirmException(TossPaymentConfirmErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
-    }
-
-    public TossPaymentConfirmErrorCode getErrorCode() {
-        return errorCode;
     }
 
     public HttpStatus getHttpStatus() {

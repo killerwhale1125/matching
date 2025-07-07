@@ -15,6 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@Table(name = "toss_payment_event")
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PRIVATE)
 public class TossPaymentEventEntity extends BaseTimeEntity {
@@ -45,6 +46,9 @@ public class TossPaymentEventEntity extends BaseTimeEntity {
     @Column(name = "executed_at")
     private LocalDateTime executedAt;
 
+    @Column(name = "requested_at")
+    private LocalDateTime requestedAt;
+
     @Column(name = "approved_at")
     private LocalDateTime approvedAt;
 
@@ -61,6 +65,7 @@ public class TossPaymentEventEntity extends BaseTimeEntity {
         entity.amount = tossPaymentEvent.getAmount();
         entity.tossPaymentStatus = tossPaymentEvent.getTossPaymentStatus();
         entity.executedAt = tossPaymentEvent.getExecutedAt();
+        entity.requestedAt = tossPaymentEvent.getRequestedAt();
         entity.approvedAt = tossPaymentEvent.getApprovedAt();
         entity.retryCount = tossPaymentEvent.getRetryCount();
         entity.createdTime = tossPaymentEvent.getCreatedTime();

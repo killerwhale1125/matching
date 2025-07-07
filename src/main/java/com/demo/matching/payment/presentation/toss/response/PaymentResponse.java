@@ -1,4 +1,4 @@
-package com.demo.matching.payment.common.toss.exception;
+package com.demo.matching.payment.presentation.toss.response;
 
 import com.demo.matching.payment.common.toss.exception.enums.TossPaymentExceptionStatus;
 import lombok.Getter;

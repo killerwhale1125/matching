@@ -11,7 +11,11 @@ import java.time.LocalDateTime;
 public class PointChargeUseCase {
     private final PointProvider pointProvider;
 
-    public void chargePoint(Long memberId, long amount, LocalDateTime approvedAt) {
-        pointProvider.chargePoint(memberId, amount, approvedAt);
+    public void chargePoint(Long memberId, String orderId, long amount, LocalDateTime approvedAt) {
+        pointProvider.chargePoint(memberId, orderId, amount, approvedAt);
+    }
+
+    public boolean alreadyCharged(String orderId) {
+        return pointProvider.alreadyCharged(orderId);
     }
 }

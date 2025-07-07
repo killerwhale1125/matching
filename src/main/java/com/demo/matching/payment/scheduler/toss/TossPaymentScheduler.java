@@ -1,6 +1,6 @@
 package com.demo.matching.payment.scheduler.toss;
 
-import com.demo.matching.payment.scheduler.toss.port.TossPaymentRecoveryService;
+import com.demo.matching.payment.scheduler.port.TossPaymentRecoveryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -1,6 +1,7 @@
-package com.demo.matching.payment.infrastructure.toss.dto;
+package com.demo.matching.payment.domain.toss.dto;
 
 import com.demo.matching.payment.domain.toss.enums.TossPaymentConfirmResultStatus;
+import com.demo.matching.payment.infrastructure.toss.dto.TossConfirmApiResponse;
 import lombok.Builder;
 
 import static com.demo.matching.payment.domain.toss.enums.TossPaymentConfirmResultStatus.SUCCESS;
@@ -13,7 +14,7 @@ public record TossPaymentInfo(
         String method,  // 결제수단 ( PaymentMethod )
         long totalAmount,   // 총 결제 금액
         String status,  // 결제 상태 처리 ( TossPaymentStatus )
-        String requestedAt,
+        String requestedAt,  // 결제 요청 날짜
         String approvedAt,   // 결제 승인 날짜
         TossPaymentConfirmResultStatus tossPaymentConfirmResultStatus
 
