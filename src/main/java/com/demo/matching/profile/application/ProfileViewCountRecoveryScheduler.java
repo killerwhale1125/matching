@@ -1,9 +1,9 @@
 package com.demo.matching.profile.application;
 
-import com.demo.matching.core.common.exception.BusinessException;
 import com.demo.matching.profile.application.port.in.ProfileRepository;
 import com.demo.matching.profile.application.port.in.ProfileViewCountHistoryRepository;
 import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
+import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.domain.ProfileViewCountHistory;
 import com.demo.matching.profile.scheduler.port.ProfileViewCountRecoveryService;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static com.demo.matching.core.common.exception.BusinessResponseStatus.PROFILE_SYNC_VIEW_COUNT_FAIL;
 
 @Service
 @RequiredArgsConstructor
@@ -42,10 +40,9 @@ public class ProfileViewCountRecoveryScheduler implements ProfileViewCountRecove
                 Long profileId = extractProfileId(key);
                 if (profileId == null) continue;
 
-                int isUpdate = profileRepository.syncUpdateViewCountBy(profileId, viewCount);
-                if (isUpdate == 0) {
-                    throw new BusinessException(PROFILE_SYNC_VIEW_COUNT_FAIL);
-                }
+                Profile profile = profileRepository.findById(profileId);
+                profile.syncViewCount(viewCount);
+                profileRepository.save(profile);
 
                 profileViewCountPort.deleteRedisKey(key);   // Redis 메모리 정리
             } catch (Exception e) {

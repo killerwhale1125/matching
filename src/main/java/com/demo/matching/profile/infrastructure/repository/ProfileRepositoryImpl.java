@@ -26,9 +26,4 @@ public class ProfileRepositoryImpl implements ProfileRepository {
                 .orElseThrow(() -> new BusinessException(PROFILE_NOT_FOUND))
                 .to();
     }
-
-    @Override
-    public int syncUpdateViewCountBy(Long profileId, Integer viewCount) {
-        return profileJpaRepository.syncUpdateViewCountBy(profileId, viewCount);
-    }
 }

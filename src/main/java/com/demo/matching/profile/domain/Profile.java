@@ -33,4 +33,8 @@ public class Profile {
         this.viewCount = viewCount;
         return this;
     }
+
+    public void syncViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
+    }
 }

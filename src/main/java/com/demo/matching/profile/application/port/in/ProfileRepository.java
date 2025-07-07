@@ -6,6 +6,4 @@ public interface ProfileRepository {
     Profile save(Profile profile);
 
     Profile findById(Long profileId);
-
-    int syncUpdateViewCountBy(Long profileId, Integer viewCount);
 }
