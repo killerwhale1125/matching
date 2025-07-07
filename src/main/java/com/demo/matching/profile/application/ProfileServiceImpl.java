@@ -2,20 +2,22 @@ package com.demo.matching.profile.application;
 
 import com.demo.matching.member.domain.Member;
 import com.demo.matching.member.domain.dto.ProfileInfo;
-import com.demo.matching.profile.presentation.port.in.ProfileService;
-import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
-import com.demo.matching.profile.presentation.response.ProfileDetailResponse;
-import com.demo.matching.profile.presentation.response.MemberProfileResponse;
-import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.domain.enums.ProfileSortType;
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
 import com.demo.matching.profile.application.port.in.ProfileQueryRepository;
 import com.demo.matching.profile.application.port.in.ProfileRepository;
 import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
+import com.demo.matching.profile.domain.Profile;
+import com.demo.matching.profile.domain.enums.ProfileSortType;
+import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.presentation.port.in.ProfileService;
+import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
+import com.demo.matching.profile.presentation.response.MemberProfileResponse;
+import com.demo.matching.profile.presentation.response.ProfileDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -56,7 +58,8 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileInfo create(Member member) {
-        return ProfileInfo.from(profileRepository.save(Profile.create(member)).getViewCount());
+        Profile profile = profileRepository.save(Profile.create(member));
+        return ProfileInfo.from(profile.getViewCount());
     }
 
     /**

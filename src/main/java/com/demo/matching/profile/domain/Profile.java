@@ -29,7 +29,8 @@ public class Profile {
     }
 
     /* 조회수 업데이트 */
-    public void updateViewCount(int viewCount) {
+    public Profile updateViewCount(int viewCount) {
         this.viewCount = viewCount;
+        return this;
     }
 }

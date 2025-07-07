@@ -1,9 +1,9 @@
 package com.demo.matching.profile.infrastructure.repository;
 
 import com.demo.matching.core.common.exception.BusinessException;
+import com.demo.matching.profile.application.port.in.ProfileRepository;
 import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.infrastructure.entity.ProfileEntity;
-import com.demo.matching.profile.application.port.in.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -25,5 +25,10 @@ public class ProfileRepositoryImpl implements ProfileRepository {
         return profileJpaRepository.findWithMemberById(profileId)
                 .orElseThrow(() -> new BusinessException(PROFILE_NOT_FOUND))
                 .to();
+    }
+
+    @Override
+    public int syncUpdateViewCountBy(Long profileId, Integer viewCount) {
+        return profileJpaRepository.syncUpdateViewCountBy(profileId, viewCount);
     }
 }

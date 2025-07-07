@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public record ProfileSearchRequest(
+        @NotNull(message = "정렬 속성은 기본값인 빈값 이거나 반드시 지정해야 합니다.")
         ProfileSortType profileSortType,
 
         @NotNull(message = "페이지는 필수입니다.")

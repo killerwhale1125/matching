@@ -16,13 +16,15 @@ public interface ProfileJpaRepository extends JpaRepository<ProfileEntity, Long>
     Optional<ProfileEntity> findWithMemberById(Long id);
 
     @Modifying
-    @Query("UPDATE ProfileEntity p SET p.viewCount = p.viewCount + :viewCount WHERE p.id = :profileId")
-    void incrementViewCountBy(@Param("profileId") Long profileId, @Param("viewCount") int viewCount);
+    @Query("UPDATE ProfileEntity p " +
+            "SET p.viewCount = :totalViewCount " +
+            "WHERE p.id = :profileId")
+    int syncUpdateViewCountBy(@Param("profileId") Long profileId, @Param("totalViewCount") int totalViewCount);
 
     @Query("SELECT p.viewCount FROM ProfileEntity p WHERE p.id = :profileId")
-    int getViewCount(@Param("profileId") Long profileId);
+    Optional<Integer> getViewCount(@Param("profileId") Long profileId);
 
-    @Modifying
-    @Query("UPDATE ProfileEntity p SET p.viewCount = p.viewCount + 1 WHERE p.id = :profileId")
-    void incrementViewCount(@Param("profileId") Long profileId);
+//    @Modifying
+//    @Query("UPDATE ProfileEntity p SET p.viewCountLoss = p.viewCountLoss + :loss WHERE p.id = :profileId")
+//    void markViewCountLoss(@Param("profileId") Long profileId, @Param("loss") int loss);
 }

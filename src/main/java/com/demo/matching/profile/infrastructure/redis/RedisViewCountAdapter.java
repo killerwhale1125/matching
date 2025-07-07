@@ -1,94 +1,123 @@
 package com.demo.matching.profile.infrastructure.redis;
 
-import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.infrastructure.repository.ProfileJpaRepository;
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.core.common.exception.BusinessException;
+import com.demo.matching.core.common.exception.BusinessResponseStatus;
+import com.demo.matching.core.common.service.port.LocalDateTimeProvider;
 import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
-import jakarta.transaction.Transactional;
+import com.demo.matching.profile.domain.Profile;
+import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.infrastructure.repository.ProfileJpaRepository;
+import com.demo.matching.profile.infrastructure.repository.ProfileViewCountHistoryJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.RedisConnectionFailureException;
+import org.springframework.data.redis.RedisSystemException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.demo.matching.profile.infrastructure.redis.RedisViewCountPrefix.*;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 public class RedisViewCountAdapter implements ProfileViewCountPort {
-    /* RedisTemplate for Long: 직렬화 설정은 별도 Config에서 처리 */
-    private final RedisTemplate<String, Long> longRedisTemplate;
+    private final RedisTemplate<String, Integer> integerRedisTemplate;
+    private final ProfileViewCountHistoryJpaRepository profileViewCountHistoryJpaRepository;
     private final ProfileJpaRepository profileJpaRepository;
+    private final LocalDateTimeProvider localDateTimeProvider;
+    private final String REDIS_VIEW_KEY = "profile:view:";
 
     /**
-     * 프로필 조회 시 조회수를 증가시키고, Hot 후보 조건을 만족하면 Redis에 캐싱
-     * - Redis 에 등록된 Hot 프로필일 경우: Redis 에서 조회수 증가
-     * - 그렇지 않으면 : DB 조회수 증가 후 일정 조건(10회 단위)에서 Redis에 캐싱
+     * 프로필 상세 조회 시 조회수 증가
+     * 1. 오늘 날짜 기반으로 Redis에서 조회수 캐싱 여부 확인
+     * 2. cache hit -> Redis 값 +1 (원자적 연산)
+     * 3. cache miss → DB 또는 어제자 Redis 값 참조 → Redis에 오늘 날짜로 신규 캐싱
+     * 4. Redis 장애 발생 시 viewCountLoss 플래그를 통해 조회수 누락 보정
      */
     @Override
-    @Transactional
     public Profile increaseViewCount(Profile profile) {
-        Long profileId = profile.getId();
-        /* Redis Hot 후보 여부 확인 */
-        boolean isHot = longRedisTemplate.opsForSet().isMember(PROFILE_VIEW_HOT.getKey(), profileId);
-        if (isHot) {
-            /* Redis 조회수 + 1 증가 */
-            int updatedCount = longRedisTemplate.opsForValue().increment(PROFILE_VIEW.withSuffix(profileId)).intValue();
-            profile.updateViewCount(updatedCount);
+        LocalDate today = localDateTimeProvider.now().toLocalDate();
+        String redisKey = REDIS_VIEW_KEY + profile.getId() + ":" + today;
+
+        /* Redis 에 이미 캐싱된 경우 → + 1 수행 후 return */
+        if (integerRedisTemplate.hasKey(redisKey)) {
+            int updatedCount = integerRedisTemplate.opsForValue().increment(redisKey).intValue();  // 원자적 연산 수행으로 동시성 안전
+            return profile.updateViewCount(updatedCount);
+        }
+
+        /* Cache Miss → 어제자 Redis or DB 조회 후 Redis 캐싱 시도 */
+        try {
+            LocalDate yesterday = today.minusDays(1);
+            Integer yesterdayViewCount = integerRedisTemplate
+                    .opsForValue().get(REDIS_VIEW_KEY + profile.getId() + ":" + yesterday);
+
+            int viewCount = yesterdayViewCount != null
+                    ? yesterdayViewCount
+                    : profileJpaRepository.getViewCount(profile.getId())
+                    .orElseThrow(() -> new BusinessException(BusinessResponseStatus.PROFILE_NOT_FOUND));
+
+            int finalViewCount;
+
+            /* Redis에 값이 없었으므로 새로 캐싱 시도 (중복 삽입 방지) */
+            boolean isInsert = integerRedisTemplate.opsForValue().setIfAbsent(redisKey, viewCount + 1);
+
+            finalViewCount = isInsert
+                    ? viewCount + 1
+                    : integerRedisTemplate.opsForValue().increment(redisKey).intValue();
+
+            return profile.updateViewCount(finalViewCount);
+        } catch (RedisConnectionFailureException | RedisSystemException e) {
+            /* Redis 장애 발생 시 조회수 누락 보정 플래그 기록 (스케줄링으로 DB 반영) */
+            profileViewCountHistoryJpaRepository.markAsLossCount(profile.getId(), 1);
             return profile;
         }
-
-        /* Hot 후보가 아니라면 DB 조회수 증가 */
-        profileJpaRepository.incrementViewCount(profileId);
-        int viewCount = profileJpaRepository.getViewCount(profileId);
-        profile.updateViewCount(viewCount);
-
-        /* 조회수가 10의 배수인 경우 Hot 후보로 등록하고 Redis에 캐싱 ( REPEATABLE 격리 수준으로 동시성 안전 ) */
-        if (viewCount % 10 == 0) {
-            long today = Long.parseLong(LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE));
-
-            /* Hot 후보 Set profile:view:hot -> { 1(인기 프로필 후보), 2, 3, 4... } */
-            longRedisTemplate.opsForSet().add(PROFILE_VIEW_HOT.getKey(), profileId);
-
-            /* 실제 캐싱될 조회수 profile:view:${profileId} -> 35(조회수) */
-            longRedisTemplate.opsForValue().set(PROFILE_VIEW.withSuffix(profileId), Long.valueOf(viewCount));
-
-            /* 추후 Hot 후보 탈락을 위한 profile:view:hot:since:${profileId} -> 20250701(캐싱된 날짜) */
-            longRedisTemplate.opsForValue().set(PROFILE_VIEW_HOT_SINCE.withSuffix(profileId), today);
-        }
-        return profile;
     }
 
     /**
-     * 캐싱된 조회수를 Redis 에서 가져오기 위한 작업
+     * 주어진 프로필 목록에 대해 Redis에서 조회수 캐시값을 일괄 조회
+     * - Redis 키 형식: profile:view:{profileId}:{today}
+     * - 누락된 값은 null로 반환되며, 순서 일치 보장
      */
     @Override
     public Map<Long, Integer> getViewCountsBy(List<MemberProfile> memberProfiles) {
-        /* profileId 를 Redis 키값 형식으로 변환 */
+        LocalDate today = localDateTimeProvider.now().toLocalDate();
+
+        /* Redis 키 생성 */
         List<String> profileIdRedisKeys = memberProfiles.stream()
-                .map(p -> PROFILE_VIEW.withSuffix(p.getProfileId()))
+                .map(p -> REDIS_VIEW_KEY + p.getProfileId() + ":" + today)
                 .toList();
-        /*
-         - 현재 캐싱 되어 있는 조회수를 Bulk 조회하여 네트워크 비용 및 DB I/O 횟수 단축
-         - 캐싱되지 않은 key 는 null 로 처리되어 기존 파라미터로 받은 memberProfiles 와 순서가 유지된다.
-        */
-        List<Long> cacheViewCounts = longRedisTemplate.opsForValue().multiGet(profileIdRedisKeys);
+
+        /* Redis 에서 일괄 조회 (null 포함) */
+        List<Integer> cacheViewCounts = integerRedisTemplate.opsForValue().multiGet(profileIdRedisKeys);
 
         /* 캐싱된 조회수 값을  Map<profileId, viewCount> 형태로 저장하여 return */
         Map<Long, Integer> cacheMap = new HashMap<>();
         for (int i = 0; i < memberProfiles.size(); i++) {
             MemberProfile profile = memberProfiles.get(i);
-            Long cacheViewCount = cacheViewCounts.get(i);
+            Integer cacheViewCount = cacheViewCounts.get(i);
 
             if (cacheViewCount != null) {
-                cacheMap.put(profile.getProfileId(), cacheViewCount.intValue());
+                cacheMap.put(profile.getProfileId(), cacheViewCount);
             }
         }
 
         return cacheMap;
+    }
+
+    @Override
+    public Integer getViewCountFromRedis(String key) {
+        return integerRedisTemplate.opsForValue().get(key);
+    }
+
+    @Override
+    public void deleteRedisKey(String key) {
+        integerRedisTemplate.delete(key);
+    }
+
+    @Override
+    public Set<String> getYesterdayKeys(LocalDate yesterday) {
+        return integerRedisTemplate.keys(REDIS_VIEW_KEY + "*" + ":" + yesterday);
     }
 }

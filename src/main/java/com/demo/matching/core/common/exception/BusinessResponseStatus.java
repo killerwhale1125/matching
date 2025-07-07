@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum BusinessResponseStatus {
     SUCCESS(HttpStatus.OK, "SUCCESS", "요청에 성공하였습니다."),
     PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "PROFILE_NOT_FOUND", "프로필이 존재하지 않습니다."),
+    PROFILE_SYNC_VIEW_COUNT_FAIL(HttpStatus.NOT_FOUND, "PROFILE_SYNC_VIEW_COUNT_FAIL", "조회수 동기화에 실패했습니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER_NOT_FOUND", "회원이 존재하지 않습니다."),
     POINT_NOT_FOUND(HttpStatus.NOT_FOUND, "POINT_NOT_FOUND", "포인트가 존재하지 않습니다."),
     INVALID_POINT_AMOUNT(HttpStatus.BAD_REQUEST, "INVALID_POINT_AMOUNT", "음수 값은 충전할 수 없습니다."),
