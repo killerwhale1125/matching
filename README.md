@@ -24,7 +24,7 @@ url : /api/profiles/{profileId}
 
 조회수 증가 처리 흐름
 
-![image](https://github.com/user-attachments/assets/a658014a-5dec-4566-a026-a8056be5fdbf)
+![image](https://github.com/user-attachments/assets/e745e45e-3b24-4d57-a24e-cf5902e705aa)
 
 요약 : 프로필이 조회될 때 마다 profileId + yyyy-mm-dd 정보로 캐싱되며, 해당 정보로 캐시의 유무를 판단하여 캐싱하고, 하루마다 자정이 지나면 스케줄링을 통해 캐시된 조회수를 DB에 동기화한다.
 
