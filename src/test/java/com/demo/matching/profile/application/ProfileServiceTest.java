@@ -6,7 +6,7 @@ import com.demo.matching.profile.application.port.in.ProfileQueryRepository;
 import com.demo.matching.profile.application.port.in.ProfileRepository;
 import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
 import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.application.dto.MemberProfile;
 import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
 import com.demo.matching.profile.presentation.response.MemberProfileResponse;
 import com.demo.matching.profile.presentation.response.ProfileDetailResponse;

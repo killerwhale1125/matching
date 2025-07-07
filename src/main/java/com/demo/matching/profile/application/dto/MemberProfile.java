@@ -1,4 +1,4 @@
-package com.demo.matching.profile.infrastructure.querydsl.dto;
+package com.demo.matching.profile.application.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

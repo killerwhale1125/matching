@@ -7,7 +7,7 @@ import com.demo.matching.profile.application.port.in.ProfileRepository;
 import com.demo.matching.profile.application.port.out.ProfileViewCountPort;
 import com.demo.matching.profile.domain.Profile;
 import com.demo.matching.profile.domain.enums.ProfileSortType;
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.application.dto.MemberProfile;
 import com.demo.matching.profile.presentation.port.in.ProfileService;
 import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
 import com.demo.matching.profile.presentation.response.MemberProfileResponse;
@@ -15,9 +15,10 @@ import com.demo.matching.profile.presentation.response.ProfileDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Comparator.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -84,8 +85,8 @@ public class ProfileServiceImpl implements ProfileService {
         /* Stream 으로 새로운 객체 생성 시 메모리 낭비로 Collection Sort 사용 */
         switch (sortType) {
             // 1. 가나다 순
-            case NAME -> memberProfiles.sort(Comparator.comparing(MemberProfile::getMemberName));
-            case VIEWS -> memberProfiles.sort(Comparator.comparingInt(MemberProfile::getViewCount).reversed());
+            case NAME -> memberProfiles.sort(comparing(MemberProfile::getMemberName));
+            case VIEWS -> memberProfiles.sort(comparingInt(MemberProfile::getViewCount).reversed());
         }
     }
 }

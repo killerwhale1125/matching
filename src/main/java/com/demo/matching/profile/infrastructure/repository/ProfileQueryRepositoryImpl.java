@@ -1,7 +1,7 @@
 package com.demo.matching.profile.infrastructure.repository;
 
 import com.demo.matching.profile.presentation.request.ProfileSearchRequest;
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.application.dto.MemberProfile;
 import com.demo.matching.profile.application.port.in.ProfileQueryRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;

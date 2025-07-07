@@ -1,6 +1,6 @@
 package com.demo.matching.profile.presentation.response;
 
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.application.dto.MemberProfile;
 import lombok.Builder;
 
 import java.time.LocalDateTime;

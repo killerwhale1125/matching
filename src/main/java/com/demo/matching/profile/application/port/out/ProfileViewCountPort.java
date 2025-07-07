@@ -1,7 +1,7 @@
 package com.demo.matching.profile.application.port.out;
 
 import com.demo.matching.profile.domain.Profile;
-import com.demo.matching.profile.infrastructure.querydsl.dto.MemberProfile;
+import com.demo.matching.profile.application.dto.MemberProfile;
 
 import java.time.LocalDate;
 import java.util.List;
