@@ -22,7 +22,7 @@
 |:--------|:---------------------------------------|-------------------------------|
 | Java   | 21                  | 경량 가상 스레드 기반으로 자원 효율성과 동시성 처리 성능에 유리 |
 | SpringBoot | 3.5.3 | DI, AOP, AutoConfiguration 등으로 생산성과 유연한 의존성 관리 |
-| MySQL | 8.0.39 | 결제 등 중요한 작업 시 UNDO 로그 기반 트랜잭션으로 읽기-쓰기 일관성 보장 및 안정적인 데이터 처리  |
+| MySQL | 8.0.36 | MySQL 안정화 LTS 버전이며, 결제 등 중요한 작업 시 UNDO 로그 기반 트랜잭션으로 읽기-쓰기 일관성 보장 및 안정적인 데이터 처리  |
 | Redis | 7.4.2 | 조회수 증가 로직의 세밀한 캐싱 제어 및 AOF/RDB 기반 데이터 유실 복구 스케줄링 가능 |
 | Spring Data JPA | 3.2.3 | 엔티티 중심의 비즈니스 로직 구현을 통해 도메인 주도 개발 구조 정립 |
 | Querydsl   | 5.0.0 | 동적 쿼리 간편 구현 및 MyBatis 대비 IDE, 컴파일 시점 오류 파악 가능 |
@@ -32,7 +32,6 @@
 ## 추가 라이브러리
 - Lombok : 반복되는 코드 제거로 간결화
 - Spring Validation : 요청 값 유효성 검증 처리 및 코드 정리
-- H2 : 테스트 환경 구성 편의성 제공
 - Httpclient5 : RestClient 기반의 HTTP 통신에서 커넥션 제어 및 타임아웃 설정을 위해 사용
 
 <br>
@@ -57,7 +56,8 @@
 <br>
 
 ```bash
-docker-compose up --build
+docker compose up       // foreground
+docker compose up -d    // background
 ```
 
 <br>
@@ -69,11 +69,18 @@ docker-compose up --build
 
 <br>
 
-> ⚠️ application.yml 등의 환경 설정 파일이 필요하다면, 사전에 적절히 구성해야 합니다.
+> ⚠️ application.yml 등의 환경 설정 파일이 필요하다면, 사전에 적절히 구성해야 합니다. (현재 프로젝트는 자동 구성 되어있음)
 
 <br>
 
-4. API 테스트 용 회원 생성 
+4. 도커 정상적 실행 확인 
+
+```bash
+docker ps
+docker logs {container-id}
+```
+
+5. API 테스트 용 회원 생성 
 
 url : /api/members/signup
 
