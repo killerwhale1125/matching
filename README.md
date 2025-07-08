@@ -81,7 +81,7 @@ docker-compose up --build
 
 ## 핵심 기능
 
-### 프로필 상세 조회 시 조회수 증가 API 
+# 프로필 상세 조회 시 조회수 증가 API 
 
 url : @GET /api/profiles/{profileId}
 param :
@@ -170,7 +170,7 @@ param :
 <br>
 <br>
 
-## 프로필 목록 조회 API
+# 프로필 목록 조회 API
 
 url : @GET /api/profiles
 
@@ -210,8 +210,11 @@ url : @GET /api/profiles
 - 다른 정렬 조건 시 애플리케이션 단 정렬로 인해 빠른 정렬 
 
 <br>
+<br>
+<br>
+<br>
 
-### 결제 정보 생성 API 
+# 결제 정보 생성 API 
 
 url : @GET /api/payments/toss/checkout
 
