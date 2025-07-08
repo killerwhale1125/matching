@@ -309,10 +309,10 @@ url : @POST /api/payments/toss/confirm
 
 ### ✅ 개선된 결제 승인 처리 흐름
 
-![image](https://github.com/user-attachments/assets/39ae72ab-2363-446c-8ede-a34368b229a3)
+![image](https://github.com/user-attachments/assets/737de2e6-277f-41c0-94f4-09ac28640719)
 
 
-
+### ✅ 문제 해결 과정
 
 
 
