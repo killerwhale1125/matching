@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   mysql:
@@ -35,10 +35,8 @@ services:
       dockerfile: Dockerfile
     container_name: matching
     depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_started
+      - mysql
+      - redis
     ports:
       - "8081:8080"
     networks:
