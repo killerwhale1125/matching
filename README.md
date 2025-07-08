@@ -75,9 +75,9 @@ docker-compose up --build
 <br>
 
 3. 초기 빌드가 완료되면 다음과 같은 서비스들이 실행됩니다.
-- Redis Port 6380 [Docker 내부]
-- MySQL Port 3307 [Docker 내부]
-- SpringBoot Port 8081 [Docker 내부]
+- Redis Port 6380 [Docker 8080]
+- MySQL Port 3307 [Docker 3306]
+- SpringBoot Port 8081 [Docker 8080]
 
 <br>
 
