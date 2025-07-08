@@ -160,7 +160,7 @@ url : @GET /api/profiles
 
 <br>
 
-###🔹 이 방식의 장점
+### 🔹 이 방식의 장점
 - **조회수 캐싱 구조와 충돌 없음** : 조회수는 Redis에 캐싱되어 DB와 완전히 동기화되지 않아도 무방
 - **단일 Index 효율 증가** : 추가적인 Index 테이블 컬럼 관리 불필요로 INSERT/UPDATE/DELETE 성능 향상
 - **정렬의 유연성 확보** : 사용자가 실제 보는 페이지 단위에서만 정렬이 이루어지므로 UX를 해치지 않으면서 정렬 기준을 다양하게 지원 가능
@@ -169,6 +169,7 @@ url : @GET /api/profiles
 
 ### 🔁 개선된 조회수 증가 처리 흐름
 
+![image](https://github.com/user-attachments/assets/d84cd190-e622-4342-bd6d-03ed7b87062f)
 
 
 
