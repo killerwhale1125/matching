@@ -71,6 +71,37 @@ docker-compose up --build
 
 ⚠️ application.yml 등의 환경 설정 파일이 필요하다면, 사전에 적절히 구성해야 합니다.
 
+4. API 테스트 용 회원 생성 
+
+url : /api/members/signup
+
+⚠️ 회원 생성 API는 1번만 호출해주세요! 단순 생성 구현으로 중복 검증 로직이 포함되어있지 않습니다.
+
+### ✅ RequestBody
+```json
+{
+    "name": "아무 이름이나 넣어주세요."
+}
+```
+
+### ✅ ResponseBody
+```json
+{
+    "status": 200,
+    "message": "요청에 성공하였습니다.",
+    "code": "SUCCESS",
+    "result": {
+        "name": "아무 이름이나 넣어주세요.",
+        "profileInfo": {
+            "viewCount": 0
+        },
+        "pointInfo": {
+            "point": 0
+        }
+    }
+}
+```
+
 <br>
 
 ## 패키지 구조 및 의존성
