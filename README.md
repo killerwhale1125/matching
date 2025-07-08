@@ -31,7 +31,12 @@ url : /api/profiles/{profileId}
 - 캐싱되지 않은 상태에서 여러명의 동시 사용자가 서로 캐싱하려는 경우
 - 어제 일자의 캐싱된 조회수가 DB에 동기화 되어있지 않고 캐시에 남아있는 경우 조회의 조회수 일관성
 - Redis 삽입 시 예외가 발생할 경우 loss 조회수 관리
-- 
+
+**⚙️ 설계 및 구현 핵심 키워드**
+- Redis 캐싱 조회수 저장
+- 날짜별 키 관리 ('profile:view:{id}:{yyyyMMdd}')
+- setIfAbsent + INCR 중복 캐싱 동시성 대응 및 조회수 일관성 확보
+- Redis 장애 대비 History 저장 및 DB 조회수 동기화 스케줄링
 
 ![image](https://github.com/user-attachments/assets/e745e45e-3b24-4d57-a24e-cf5902e705aa)
 
