@@ -52,23 +52,11 @@
 
 ## 프로젝트 실행법
 1. 이 저장소를 클론하거나 `.zip` 파일로 다운로드한 후 압축을 풉니다.
-
-> ⚠️ Java 21이 반드시 설치되어있어야 합니다! 실행 전 Java 21 설치 부탁드립니다.
-
-
-linux Java 21 설치 
-```bash
-sudo apt update
-sudo apt install -y openjdk-21-jdk 
-```
-
-2. 프로젝트 루트 디렉토리에서 아래 명령어를 실행합니다.
+3. 프로젝트 루트 디렉토리에서 아래 명령어를 실행합니다.
 
 <br>
 
 ```bash
-chmod +x gradlew
-./gradlew clean build
 docker-compose up --build
 ```
 
