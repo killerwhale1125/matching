@@ -67,6 +67,8 @@ sudo apt install -y openjdk-21-jdk
 <br>
 
 ```bash
+chmod +x gradlew
+./gradlew clean build
 docker-compose up --build
 ```
 
@@ -120,7 +122,32 @@ url : /api/members/signup
 
 ![image](https://github.com/user-attachments/assets/eabf7d5e-f91f-4204-b0b1-0d4bdd5e7f57)
 
-<br>
+```text
+├── application                     // application : 비즈니스 로직을 처리하는 계층
+│   ├── TossPaymentConfirmServiceImpl.java
+│   ├── dto
+│   ├── port
+│   │   ├── TossPaymentRepository.java
+│   └── usecase                     // usecase : 애플리케이션의 특정 비즈니스 흐름 처리 전용  
+│       └── TossPaymentExecutorUseCase.java
+├── domain                          // domain : 핵심 비즈니스 로직의 순수 도메인 
+│   └── TossPayment.java
+├── exception
+├── infrastructure                  // infrastructure : 외부 시스템과 상호작용하는 구현체 
+│   ├── entity                      // entity: DB와 매핑되는 데이터베이스 테이블을 나타내는 클래스 ex ) JPA Entity
+│   │   └── TossPaymentEntity.java
+│   ├── internal                    // internal : 서버 내부 도메인과 통신하기 위한 구현체 
+│   │   └── InternalMemberProvider.java
+│   └── repostitory                 // repostitory : 데이터베이스 접근 시 인터페이스 및 구현체
+│       ├── TossPaymentJpaRepository.java 
+│       └── TossPaymentRepositoryImpl.java
+└── presentation                    // presentation : 외부 요청을 받아들이고 응답을 반환
+    ├── TossPaymentController.java
+    ├── dto
+    └── port
+        └── TossPaymentConfirmService.java
+```
+
 
 ## 핵심 기능
 
