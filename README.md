@@ -52,17 +52,7 @@
 
 ## 프로젝트 실행법
 1. 이 저장소를 클론하거나 `.zip` 파일로 다운로드한 후 압축을 풉니다.
-
-> ⚠️ Java 21이 반드시 설치되어있어야 합니다! 실행 전 Java 21 설치 부탁드립니다.
-
-
-linux Java 21 설치 
-```bash
-sudo apt update
-sudo apt install -y openjdk-21-jdk 
-```
-
-2. 프로젝트 루트 디렉토리에서 아래 명령어를 실행합니다.
+3. 프로젝트 루트 디렉토리에서 아래 명령어를 실행합니다.
 
 <br>
 
@@ -73,9 +63,9 @@ docker-compose up --build
 <br>
 
 3. 초기 빌드가 완료되면 다음과 같은 서비스들이 실행됩니다.
-- Redis Port 6380 [Docker 내부]
-- MySQL Port 3307 [Docker 내부]
-- SpringBoot Port 8081 [Docker 내부]
+- Redis Port 6380 [Docker 8080]
+- MySQL Port 3307 [Docker 3306]
+- SpringBoot Port 8081 [Docker 8080]
 
 <br>
 
@@ -120,9 +110,32 @@ url : /api/members/signup
 
 ![image](https://github.com/user-attachments/assets/eabf7d5e-f91f-4204-b0b1-0d4bdd5e7f57)
 
-<br>
+```text
+├── application                     // application : 비즈니스 로직을 처리하는 계층
+│   ├── TossPaymentConfirmServiceImpl.java
+│   ├── dto
+│   ├── port
+│   │   ├── TossPaymentRepository.java
+│   └── usecase                     // usecase : 애플리케이션의 특정 비즈니스 흐름 처리 전용  
+│       └── TossPaymentExecutorUseCase.java
+├── domain                          // domain : 핵심 비즈니스 로직의 순수 도메인 
+│   └── TossPayment.java
+├── exception
+├── infrastructure                  // infrastructure : 외부 시스템과 상호작용하는 구현체 
+│   ├── entity                      // entity: DB와 매핑되는 데이터베이스 테이블을 나타내는 클래스 ex ) JPA Entity
+│   │   └── TossPaymentEntity.java
+│   ├── internal                    // internal : 서버 내부 도메인과 통신하기 위한 구현체 
+│   │   └── InternalMemberProvider.java
+│   └── repostitory                 // repostitory : 데이터베이스 접근 시 인터페이스 및 구현체
+│       ├── TossPaymentJpaRepository.java 
+│       └── TossPaymentRepositoryImpl.java
+└── presentation                    // presentation : 외부 요청을 받아들이고 응답을 반환
+    ├── TossPaymentController.java
+    ├── dto
+    └── port
+        └── TossPaymentConfirmService.java
+```
 
-## 핵심 기능
 
 # 프로필 상세 조회 시 조회수 증가 API 
 
