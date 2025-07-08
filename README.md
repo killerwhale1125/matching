@@ -387,6 +387,9 @@ url : @POST /api/payments/toss/confirm
 
 ### ⏱ 결제 재시도 전략 및 스케줄러
 
+![image](https://github.com/user-attachments/assets/186667bd-0e65-45ed-8b4d-342fba5385a5)
+
+
 우선적으로 복잡한 재시도 로직을 단순화하기 위해, 재시도 가능한 상태를 아래 두 가지로 한정하였습니다.
 - UNKOWN : 알수 없음 ( 서버 지연, 중단 등 )
 - IN_PROGRESS : 결제는 시작되었지만 승인되지 않은 상태
