@@ -61,6 +61,8 @@
 ### 프로필 상세 조회 시 조회수 증가 API 
 
 url : @GET /api/profiles/{profileId}
+param :
+- Long profileId
 
 ### 🎯 핵심 문제 정의
 - 실시간으로 DB에 조회수를 반영하면 DB 부하가 증가함
@@ -181,8 +183,20 @@ url : @GET /api/profiles
 - 단일 Index 사용으로 빠른 데이터 조회와 효율적인 Index Ragne Scan
 - 다른 정렬 조건 시 애플리케이션 단 정렬로 인해 빠른 정렬 
 
+<br>
 
+### 결제 정보 생성 API 
 
+url : @GET /api/payments/toss/checkout
+
+@RequestBody :
+- long amount -> 충전할 금액
+- String orderName -> 주문명
+- String memberId -> 회원 아이디
+
+### 🧠 설계 및 구현 핵심 키워드
+- 결제 전 정보 생성 내역을 결제 요청 Event History 에 저장되도록 설계하여 실제 결제 내역과 요청의 상태를 분리하여 유연함 확장
+- 해당 결제 Event를 기반으로 하여 추후 결제 승인 요청 및 실패의 재시도 로직에 해당 Event 상태를 고려하여 처리
 
 
 
