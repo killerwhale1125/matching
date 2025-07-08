@@ -221,6 +221,25 @@ url : @GET /api/payments/toss/checkout
 - 결제 전 정보 생성 내역을 결제 요청 Event History 에 저장되도록 설계하여 실제 결제 내역과 요청의 상태를 분리하여 유연함 확장
 - 해당 결제 Event를 기반으로 하여 추후 결제 승인 요청 및 실패의 재시도 로직에 해당 Event 상태를 고려하여 처리
 
+<br>
+
+### ✅ Response
+```json
+{
+    "status": 200,
+    "message": "요청에 성공하였습니다.",
+    "code": "SUCCESS",
+    "result": {
+        "orderId": "adb12d7c-c493-4ef4-ad27-3aa5390dd824",
+        "amount": 50000,
+        "orderName": "포인트 충전",
+        "memberId": 1,
+        "successUrl": "http://127.0.0.1/success",
+        "failUrl": "http://127.0.0.1/fail",
+        "clientKey": "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"
+    }
+}
+```
 
 
 
