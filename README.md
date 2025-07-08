@@ -218,7 +218,7 @@ url : @GET /api/payments/toss/checkout
 
 <br>
 
-### ✅ Request
+### ✅ RequestBody
 ```json
 {
     "amount" : 50000,
@@ -229,7 +229,7 @@ url : @GET /api/payments/toss/checkout
 
 <br>
 
-### ✅ Response
+### ✅ ResponseBody
 ```json
 {
     "status": 200,
