@@ -30,9 +30,10 @@
 <br>
 
 ## 추가 라이브러리
-- Lombok - 반복되는 코드 제거로 간결화
-- Spring Validation - 요청 값 유효성 검증 처리 및 코드 정리
-- H2 - 테스트 환경 구성 편의성 제공
+- Lombok : 반복되는 코드 제거로 간결화
+- Spring Validation : 요청 값 유효성 검증 처리 및 코드 정리
+- H2 : 테스트 환경 구성 편의성 제공
+- Httpclient5 : RestClient 기반의 HTTP 통신에서 커넥션 제어 및 타임아웃 설정을 위해 사용
 
 <br>
 
@@ -41,7 +42,7 @@
 
 | 기능 | URL                                       | 메소드 | 설명                          |
 |:--------|:---------------------------------------|--------|-------------------------------|
-| 회원가입   | /api/members/signup                  | POST   | 간단한 회원가입 (주의 : 회원 중복 체크 없음 1번만 실행해야 함) |
+| 회원가입   | /api/members/signup                  | POST   | 간단한 회원가입 |
 | 회원 프로필 상세 조회   | /api/profiles/{profileId}| GET    | 회원 ID로 프로필 조회 및 조회수 증가 |
 | 회원 프로필 리스트 조회 | /api/profiles            | GET    | 필터링 조건에 부합하는 회원 목록 조회 |
 | Toss 결제 정보 생성   | /api/payments/toss/checkout | POST | Toss 결제 전 사용자 결제 정보 생성 및 응답 |
