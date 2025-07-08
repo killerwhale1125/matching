@@ -27,6 +27,8 @@
 | Toss 결제 정보 생성   | /api/payments/toss/checkout | POST | Toss 결제 전 사용자 결제 정보 생성 및 응답 |
 | Toss 결제 승인 요청   | /api/payments/toss/confirm | POST | Toss 결제 승인 전 사용자 검증 및 결제 상태 처리 |
 
+<br>
+
 ## 패키지 구조 및 의존성
 
 ![image](https://github.com/user-attachments/assets/eabf7d5e-f91f-4204-b0b1-0d4bdd5e7f57)
