@@ -179,7 +179,7 @@ url : @GET /api/profiles
 
 <br>
 
-### 💡 문재 해결 아이디어
+### 💡 문제제 해결 아이디어
 사용자 및 전문가 매칭 서비스 특성 상 사용자가 특정 전문가를 직접 검색하기보다는 주제에 맞는 다양한 전문가 목록을 탐색하는 방식에 가깝습니다.
 
 <br>
@@ -223,7 +223,7 @@ url : @GET /api/profiles
 
 # 결제 정보 생성 API 
 
-url : @GET /api/payments/toss/checkout
+url : @POST /api/payments/toss/checkout
 
 ### 🧠 설계 및 구현 핵심 키워드
 **결제 상태 분리**
@@ -267,7 +267,9 @@ url : @GET /api/payments/toss/checkout
 <br>
 <br>
 
-# 결제 정보 생성 API 
+# 결제 승인 API 
+
+url : @POST /api/payments/toss/confirm
 
 ### 🎯 핵심 문제 정의
 - 결제 승인 전 결제 이벤트 정보를 기반으로 상태 값을 정확하게 처리해야 하는 문제
@@ -275,7 +277,19 @@ url : @GET /api/payments/toss/checkout
 - 결제 실패 발생 시 사용자 요청에 대해 재시도 가능한 구조로 처리하는 흐름 제어 문제
 - 예외 발생 시 트랜잭션 범위를 명확히 지정하여 데이터 정합성과 롤백 안정성을 보장하는 문제
 
+<br>
 
+### ✅ RequestBody
+```json
+{
+    "memberId" : 1,
+    "paymentKey" : "tgen_20250703215445yds20",
+    "orderId" : "40a7e1d8-eeca-4ee7-9309-fdd70fd20016",
+    "amount" : 5000
+}
+```
+
+<br>
 
 
 
