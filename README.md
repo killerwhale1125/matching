@@ -73,6 +73,39 @@ docker-compose up --build
 
 <br>
 
+4. API 테스트 용 회원 생성 
+
+url : /api/members/signup
+
+⚠️ 회원 생성 API는 1번만 호출해주세요! 단순 생성 구현으로 중복 검증 로직이 포함되어있지 않습니다.
+
+### ✅ RequestBody
+```json
+{
+    "name": "아무 이름이나 넣어주세요."
+}
+```
+
+### ✅ ResponseBody
+```json
+{
+    "status": 200,
+    "message": "요청에 성공하였습니다.",
+    "code": "SUCCESS",
+    "result": {
+        "name": "아무 이름이나 넣어주세요.",
+        "profileInfo": {
+            "viewCount": 0
+        },
+        "pointInfo": {
+            "point": 0
+        }
+    }
+}
+```
+
+<br>
+
 ## 패키지 구조 및 의존성
 
 ![image](https://github.com/user-attachments/assets/eabf7d5e-f91f-4204-b0b1-0d4bdd5e7f57)
@@ -151,6 +184,10 @@ param :
 <br>
 
 ### ⏱ 조회수 동기화 스케줄러
+
+![image](https://github.com/user-attachments/assets/db0b411a-879f-4483-bd2f-6a72f338b361)
+
+
 실행 시점: 매일 새벽 1시 (사용자 적은 시간대)
 
 프로세스
@@ -351,6 +388,9 @@ url : @POST /api/payments/toss/confirm
 <br>
 
 ### ⏱ 결제 재시도 전략 및 스케줄러
+
+![image](https://github.com/user-attachments/assets/186667bd-0e65-45ed-8b4d-342fba5385a5)
+
 
 우선적으로 복잡한 재시도 로직을 단순화하기 위해, 재시도 가능한 상태를 아래 두 가지로 한정하였습니다.
 - UNKOWN : 알수 없음 ( 서버 지연, 중단 등 )
