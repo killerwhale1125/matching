@@ -294,7 +294,7 @@ url : @POST /api/payments/toss/confirm
 
 ### ❌ 초기 구현 방식과 한계
 
-![image](https://github.com/user-attachments/assets/a0b1e6c0-fc00-4dac-89f6-d35d2fbfee3a)
+![image](https://github.com/user-attachments/assets/d1e126fc-f78c-41c5-9f82-74fb00055b8d)
 
 1. 사용자가 결제 승인 요청 시 해당 정보를 DB에서 검증 후 Toss에 승인 요청
 2. 성공시 결제 정보 DB 저장, 실패 시 결제 실패 처리
@@ -309,7 +309,7 @@ url : @POST /api/payments/toss/confirm
 
 ### ✅ 개선된 결제 승인 처리 흐름
 
-![image](https://github.com/user-attachments/assets/d1e126fc-f78c-41c5-9f82-74fb00055b8d)
+
 
 
 
