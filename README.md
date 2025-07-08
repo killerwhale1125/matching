@@ -18,8 +18,7 @@
 
 ## 패키지 구조 및 의존성
 
-![image](https://github.com/user-attachments/assets/194cde24-cc43-4bc1-bb91-eb4335574ab2)
-
+![image](https://github.com/user-attachments/assets/eabf7d5e-f91f-4204-b0b1-0d4bdd5e7f57)
 
 ## 핵심 기능 구현
 
