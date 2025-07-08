@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface TossPaymentEventJpaRepository extends JpaRepository<TossPaymentEventEntity, Long> {
     Optional<TossPaymentEventEntity> findByOrderId(String orderId);
     
-    /* 5분 전 & 결제 가능 상태의 결제 이력 조회 (UNKNOWN -> 날짜 기록 없음 )*/
+    /* 3분 전 & 결제 가능 상태의 결제 이력 조회 (UNKNOWN -> 날짜 기록 없음 )*/
     @Query("SELECT pe " +
             "FROM TossPaymentEventEntity pe " +
             "WHERE ((pe.tossPaymentStatus = :inProgress AND pe.executedAt < :before) " +

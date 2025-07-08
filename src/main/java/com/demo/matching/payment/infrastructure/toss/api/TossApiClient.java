@@ -1,10 +1,9 @@
 package com.demo.matching.payment.infrastructure.toss.api;
 
 import com.demo.matching.payment.application.toss.port.in.TossApiClientPort;
-import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmException;
 import com.demo.matching.payment.common.toss.exception.enums.TossPaymentConfirmErrorCode;
 import com.demo.matching.payment.domain.toss.dto.TossPaymentInfo;
-import com.demo.matching.payment.infrastructure.interceptor.PaymentExceptionInterceptor;
+import com.demo.matching.payment.domain.toss.exception.TossPaymentConfirmException;
 import com.demo.matching.payment.infrastructure.toss.dto.TossConfirmApiResponse;
 import com.demo.matching.payment.infrastructure.toss.dto.TossPaymentFailOutput;
 import com.demo.matching.payment.infrastructure.toss.mapper.TossInfoMapper;
@@ -45,7 +44,6 @@ public class TossApiClient implements TossApiClientPort {
         this.tossProperties = tossProperties;
         this.restClient = RestClient.builder()
                 .requestFactory(createPaymentRequestFactory())
-                .requestInterceptor(new PaymentExceptionInterceptor())
                 .baseUrl(tossProperties.getBaseUrl())
                 .defaultHeader(HttpHeaders.AUTHORIZATION, createPaymentAuthHeader(tossProperties.getSecretKey()))
                 .build();

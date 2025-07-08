@@ -21,7 +21,7 @@ import static com.demo.matching.payment.domain.toss.enums.TossPaymentStatus.*;
 public class TossPaymentEvent {
 
     /* 3분 후 결제 재시도 */
-    public static final int RETRYABLE_MINUTES_FOR_IN_PROGRESS = 2;
+    public static final int RETRYABLE_MINUTES_FOR_IN_PROGRESS = 3;
     /* 결제 재시도 5번만 가능  */
     public static final int RETRYABLE_LIMIT = 5;
 

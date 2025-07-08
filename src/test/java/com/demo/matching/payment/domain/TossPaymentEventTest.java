@@ -245,7 +245,7 @@ public class TossPaymentEventTest {
     @DisplayName("재시도 조건 확인 - IN_PROGRESS 상태이고 시간이 지났을 때")
     void isRetryable_validCondition() {
         // given
-        final LocalDateTime before = LocalDateTime.now().minusMinutes(3);
+        final LocalDateTime before = LocalDateTime.now().minusMinutes(4);
         final LocalDateTime now = LocalDateTime.now();
         final TossPaymentEvent event = TossPaymentEvent.builder()
                 .tossPaymentStatus(IN_PROGRESS)

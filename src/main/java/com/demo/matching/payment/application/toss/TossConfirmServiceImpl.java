@@ -35,7 +35,7 @@ public class TossConfirmServiceImpl implements TossConfirmService {
         // 회원 정보 검증
         orderedMemberUseCase.getMemberInfoById(request.memberId());
 
-        // 주문 정보 조회 및 유효성 검사
+        // 주문 정보 조회 및 유효성 검사 후 결제 시작 처리 (IN_PROGRESS)
         TossPaymentEvent paymentEvent = tossPaymentSelectUseCase.findPaymentEventByOrderId(request.orderId());
         tossPaymentExecutorUseCase.execute(paymentEvent, request);
 

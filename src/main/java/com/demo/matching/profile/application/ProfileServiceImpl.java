@@ -44,14 +44,13 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public List<MemberProfileResponse> getProfiles(ProfileSearchRequest request) {
         // 기본 정렬 : 등록일 내림차순 ( DB 에서 처리 - Index 설정 시 단일 Index 로 Index 테이블 관리 비용 및 성능 향상 )
-        // 그 외 code level 정렬
         List<MemberProfile> memberProfiles = profileQueryRepository.getProfiles(request);
         if (memberProfiles == null || memberProfiles.isEmpty()) return List.of();
 
         /* 캐시된 조회수와 DB 조회수 동기화 */
         syncViewCountWithCache(memberProfiles, profileViewCountPort.getViewCountsBy(memberProfiles));
 
-        /* 선택 정렬 조건 적용 (기본: 최신순 → 정렬 없음) */
+        /* 선택 정렬 조건 적용 ( 기본: 최신순 → 정렬 생략 ) */
         sortMemberProfiles(memberProfiles, request.profileSortType());
 
         return memberProfiles.stream().map(MemberProfileResponse::from).toList();
