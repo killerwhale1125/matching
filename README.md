@@ -149,8 +149,6 @@ url : /api/members/signup
 ```
 
 
-## 핵심 기능
-
 # 프로필 상세 조회 시 조회수 증가 API 
 
 url : @GET /api/profiles/{profileId}
