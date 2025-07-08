@@ -113,6 +113,18 @@ url : /api/members/signup
 
 <br>
 
+6. DB 데이터 생성 확인
+
+```bash
+docker exec -it mysql mysql -umatching_user -p
+password : matching_pass
+
+> use matching;
+> select * from member \G;
+```
+
+<br>
+
 ## 패키지 구조 및 의존성
 
 ![image](https://github.com/user-attachments/assets/eabf7d5e-f91f-4204-b0b1-0d4bdd5e7f57)
