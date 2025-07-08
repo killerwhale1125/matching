@@ -182,6 +182,10 @@ param :
 <br>
 
 ### ⏱ 조회수 동기화 스케줄러
+
+![image](https://github.com/user-attachments/assets/db0b411a-879f-4483-bd2f-6a72f338b361)
+
+
 실행 시점: 매일 새벽 1시 (사용자 적은 시간대)
 
 프로세스
