@@ -32,7 +32,6 @@
 ## 추가 라이브러리
 - Lombok : 반복되는 코드 제거로 간결화
 - Spring Validation : 요청 값 유효성 검증 처리 및 코드 정리
-- H2 : 테스트 환경 구성 편의성 제공
 - Httpclient5 : RestClient 기반의 HTTP 통신에서 커넥션 제어 및 타임아웃 설정을 위해 사용
 
 <br>
