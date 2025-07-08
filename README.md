@@ -16,6 +16,11 @@
 
 <br>
 
+## 패키지 구조 및 의존성
+
+![image](https://github.com/user-attachments/assets/194cde24-cc43-4bc1-bb91-eb4335574ab2)
+
+
 ## 핵심 기능 구현
 
 **프로필 조회수 증가 처리 및 장애 복구 설계**
