@@ -275,6 +275,7 @@ url : @POST /api/payments/toss/confirm
 - 결제 승인 전 결제 이벤트 정보를 기반으로 상태 값을 정확하게 처리해야 하는 문제
 - Toss 전용 결제 도메인의 로직이 과도하게 퍼져 있어, 응집력 저하 및 결합도 증가 문제
 - 결제 실패 발생 시 사용자 요청에 대해 재시도 가능한 구조로 처리하는 흐름 제어 문제
+- 결제 중복 요청 시 멱등성 문제
 - 예외 발생 시 트랜잭션 범위를 명확히 지정하여 데이터 정합성과 롤백 안정성을 보장하는 문제
 
 <br>
@@ -307,6 +308,8 @@ url : @POST /api/payments/toss/confirm
 
 
 ### ✅ 개선된 결제 승인 처리 흐름
+
+![image](https://github.com/user-attachments/assets/d1e126fc-f78c-41c5-9f82-74fb00055b8d)
 
 
 
