@@ -50,6 +50,29 @@
 
 <br>
 
+## 프로젝트 실행법
+1. 이 저장소를 클론하거나 `.zip` 파일로 다운로드한 후 압축을 풉니다.
+2. 프로젝트 루트 디렉토리에서 아래 명령어를 실행합니다.
+
+<br>
+
+```bash
+docker-compose up --build
+```
+
+<br>
+
+3. 초기 빌드가 완료되면 다음과 같은 서비스들이 실행됩니다.
+- Redis Port 6380 [Docker 내부]
+- MySQL Port 3307 [Docker 내부]
+- SpringBoot Port 8081 [Docker 내부]
+
+<br>
+
+⚠️ application.yml 등의 환경 설정 파일이 필요하다면, 사전에 적절히 구성해야 합니다.
+
+<br>
+
 ## 패키지 구조 및 의존성
 
 ![image](https://github.com/user-attachments/assets/eabf7d5e-f91f-4204-b0b1-0d4bdd5e7f57)
