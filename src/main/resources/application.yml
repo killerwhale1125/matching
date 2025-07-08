@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3307/matching?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://mysql:3306/matching?allowPublicKeyRetrieval=true&useSSL=false
     username: matching_user
     password: matching_pass
 
@@ -17,7 +17,7 @@ spring:
   redis:
     cache:
       host: redis
-      port: 6380
+      port: 6379
 
 logging:
   level:
