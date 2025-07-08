@@ -57,7 +57,7 @@
 <br>
 
 ```bash
-docker-compose up --build
+docker-compose up
 ```
 
 <br>
@@ -69,11 +69,18 @@ docker-compose up --build
 
 <br>
 
-> ⚠️ application.yml 등의 환경 설정 파일이 필요하다면, 사전에 적절히 구성해야 합니다.
+> ⚠️ application.yml 등의 환경 설정 파일이 필요하다면, 사전에 적절히 구성해야 합니다. (현재 프로젝트는 자동 구성 되어있음)
 
 <br>
 
-4. API 테스트 용 회원 생성 
+4. 도커 정상적 실행 확인 
+
+```bash
+docker ps
+docker logs {container-id}
+```
+
+5. API 테스트 용 회원 생성 
 
 url : /api/members/signup
 
